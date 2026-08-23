@@ -117,7 +117,7 @@ input{
 
 <h1>🥡 Quản lý bán hàng</h1>
     <div style="margin:15px 0;">
-  <button onclick="showProducts()"
+ <button onclick="document.getElementById('productSection').style.display='block'; document.getElementById('productSection').scrollIntoView({behavior:'smooth'});"
     style="width:100%;padding:14px;border:0;border-radius:10px;background:#2563eb;color:white;font-size:17px;font-weight:bold;">
     📦 DANH MỤC SẢN PHẨM
   </button>
@@ -715,14 +715,8 @@ if ("serviceWorker" in navigator) {
     navigator.serviceWorker.register("./sw.js");
 }
 </script>
-<!-- DANH MỤC SẢN PHẨM -->
-<div id="productSection" style="display:none; padding:20px;">
-  <h2>📦 Danh mục sản phẩm</h2>
 
-  <button onclick="showAddProduct()"
-    style="padding:10px 15px; margin-bottom:15px;">
-    ➕ Thêm sản phẩm
-  </button>
+    
 
   <div id="productForm" style="display:none;">
     <input id="productName" placeholder="Tên sản phẩm"
