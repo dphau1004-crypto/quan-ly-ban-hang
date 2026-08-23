@@ -412,16 +412,12 @@ function hienNgay(date){
 
 
 function tien(so){
-if(ban > tonDau + nhap){
 
-        alert(
-            "❌ Số bán vượt quá số tồn!"
-        );
+    return new Intl.NumberFormat(
+        "vi-VN"
+    ).format(so)+"đ";
 
-        return;
-
-    }
-
+}
 
     const tonCuoi =
         tonDau + nhap - ban;
@@ -672,3 +668,216 @@ function luuNgay(){
         Number(
             document.getElementById("gia").value
         ) || 0;
+    if(ban > tonDau + nhap){
+
+        alert("❌ Số bán vượt quá số tồn!");
+
+        return;
+    }
+
+    const tonCuoi =
+        tonDau + nhap - ban;
+
+    const doanhSo =
+        ban * gia;
+
+    const data =
+        layDuLieu();
+
+    const key =
+        maNgay(ngayDangChon);
+
+    data[key] = {
+        tonDau: tonDau,
+        nhap: nhap,
+        ban: ban,
+        gia: gia,
+        tonCuoi: tonCuoi,
+        doanhSo: doanhSo
+    };
+
+    luuDuLieu(data);
+
+    tinh();
+    tinhThang();
+
+    alert("✅ Đã lưu ngày!");
+}
+
+
+function tinhThang(){
+
+    const data =
+        layDuLieu();
+
+    const nam =
+        ngayDangChon.getFullYear();
+
+    const thang =
+        ngayDangChon.getMonth();
+
+    let tongBan = 0;
+    let tongDoanhSo = 0;
+
+    Object.keys(data).forEach(function(key){
+
+        const p = key.split("-");
+
+        const y = Number(p[0]);
+        const m = Number(p[1]) - 1;
+
+        if(y === nam && m === thang){
+
+            tongBan +=
+                Number(data[key].ban) || 0;
+
+            tongDoanhSo +=
+                Number(data[key].doanhSo) || 0;
+        }
+
+    });
+
+    document.getElementById("thang").innerText =
+        "📅 Tháng " +
+        String(thang + 1).padStart(2,"0") +
+        "/" +
+        nam;
+
+    document.getElementById("tongBan").innerText =
+        tongBan + " bịch";
+
+    document.getElementById("tongDoanhSo").innerText =
+        tien(tongDoanhSo);
+}
+            <div>
+                    Tồn kho:
+                    ${p.stock || 0}
+                </div>
+
+                <div class="product-actions">
+
+                    <button
+                        class="delete-btn"
+                        onclick="xoaSanPham(${p.id})">
+                        🗑️ Xóa
+                    </button>
+
+                </div>
+
+            </div>
+            `;
+
+        }).join("");
+
+}
+
+
+/* ================= SỰ KIỆN ================= */
+
+document.getElementById("btnProducts")
+.addEventListener(
+    "click",
+    hienDanhMuc
+);
+
+
+document.getElementById("btnAddProduct")
+.addEventListener(
+    "click",
+    moFormSanPham
+);
+
+
+document.getElementById("btnSaveProduct")
+.addEventListener(
+    "click",
+    luuSanPham
+);
+
+
+document.getElementById("btnPrev")
+.addEventListener(
+    "click",
+    function(){
+        doiNgay(-1);
+    }
+);
+
+
+document.getElementById("btnNext")
+.addEventListener(
+    "click",
+    function(){
+        doiNgay(1);
+    }
+);
+
+
+document.getElementById("btnSaveDay")
+.addEventListener(
+    "click",
+    luuNgay
+);
+
+
+document.getElementById("tonDau")
+.addEventListener(
+    "input",
+    tinh
+);
+
+
+document.getElementById("nhap")
+.addEventListener(
+    "input",
+    tinh
+);
+
+
+document.getElementById("ban")
+.addEventListener(
+    "input",
+    tinh
+);
+
+
+document.getElementById("gia")
+.addEventListener(
+    "input",
+    tinh
+);
+
+
+/* ================= KHỞI ĐỘNG ================= */
+
+loadProducts();
+
+taiNgay();
+
+tinhThang();
+
+tinh();
+
+hienSanPham();
+
+
+/* ================= OFFLINE ================= */
+
+if("serviceWorker" in navigator){
+
+    navigator.serviceWorker.register("./sw.js")
+    .catch(function(error){
+
+        console.log(
+            "Service Worker:",
+            error
+        );
+
+    });
+
+}
+
+</script>
+
+</body>
+</html>
