@@ -117,7 +117,7 @@ input{
 
 <h1>🥡 Quản lý bán hàng</h1>
     <div style="margin:15px 0;">
- <button onclick="document.getElementById('productSection').style.display='block'; document.getElementById('productSection').scrollIntoView({behavior:'smooth'});"
+ <button id="btnProducts"
     style="width:100%;padding:14px;border:0;border-radius:10px;background:#2563eb;color:white;font-size:17px;font-weight:bold;">
     📦 DANH MỤC SẢN PHẨM
   </button>
@@ -761,6 +761,15 @@ function displayProducts() {
 }
 
 displayProducts();
+    document.getElementById("btnProducts").addEventListener("click", function() {
+    const section = document.getElementById("productSection");
+
+    if (section) {
+        section.style.display = "block";
+        section.scrollIntoView({ behavior: "smooth" });
+        displayProducts();
+    }
+});
 </script>
 </body>
 </html>
