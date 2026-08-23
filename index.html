@@ -750,10 +750,8 @@ function showAddProduct() {
   document.getElementById("productForm").style.display = "block";
 }
     function showProducts() {
-  const section = document.getElementById("productSection");
-  section.style.display = "block";
-  displayProducts();
-  section.scrollIntoView({ behavior: "smooth" });
+  document.getElementById("productSection").style.display = "block";
+}
 }
 
 function saveProduct() {
