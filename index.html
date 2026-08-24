@@ -29,11 +29,7 @@ body{
     border-radius:15px;
 }
 
-h1{
-    margin-top:0;
-}
-
-h2,h3{
+h1,h2,h3{
     margin-top:0;
 }
 
@@ -94,32 +90,16 @@ input{
     padding-top:10px;
 }
 
-.save,
-.primary{
+.save{
     width:100%;
     padding:15px;
     margin-top:15px;
     border:0;
     border-radius:10px;
+    background:#111827;
     color:white;
     font-size:17px;
     font-weight:bold;
-}
-
-.save{
-    background:#111827;
-}
-
-.primary{
-    background:#2563eb;
-}
-
-.danger{
-    background:#dc2626;
-    color:white;
-    border:0;
-    padding:8px 12px;
-    border-radius:8px;
 }
 
 .stock{
@@ -130,43 +110,6 @@ input{
     font-size:32px;
     font-weight:bold;
 }
-
-.product-item{
-    border:1px solid #ddd;
-    padding:15px;
-    margin-top:12px;
-    border-radius:12px;
-    background:#f9fafb;
-}
-
-.product-name{
-    font-size:19px;
-    font-weight:bold;
-    margin-bottom:8px;
-}
-
-.product-actions{
-    display:flex;
-    gap:8px;
-    margin-top:12px;
-}
-
-.product-actions button{
-    flex:1;
-    padding:10px;
-    border:0;
-    border-radius:8px;
-}
-
-.edit-btn{
-    background:#f59e0b;
-    color:white;
-}
-
-.delete-btn{
-    background:#dc2626;
-    color:white;
-}
 </style>
 </head>
 
@@ -174,15 +117,9 @@ input{
 
 <div class="container">
 
-<!-- ================= BÁN HÀNG ================= -->
-
 <div class="card">
 
 <h1>🥡 Quản lý bán hàng</h1>
-
-<button id="btnProducts" class="primary">
-📦 DANH MỤC SẢN PHẨM
-</button>
 
 <div class="date">
 
@@ -193,6 +130,7 @@ input{
 <button id="btnNext">▶</button>
 
 </div>
+
 
 <div class="grid">
 
@@ -217,6 +155,8 @@ input{
 </div>
 
 </div>
+
+
 <div class="result">
 
 <p>
@@ -241,6 +181,7 @@ input{
 
 </div>
 
+
 <div class="result">
 
 <p>
@@ -250,14 +191,13 @@ input{
 
 </div>
 
+
 <button id="btnSaveDay" class="save">
 💾 LƯU NGÀY
 </button>
 
 </div>
 
-
-<!-- ================= TỒN HIỆN TẠI ================= -->
 
 <div class="card stock">
 
@@ -269,8 +209,6 @@ input{
 
 </div>
 
-
-<!-- ================= DOANH SỐ THÁNG ================= -->
 
 <div class="card">
 
@@ -284,7 +222,6 @@ input{
 <span>Tổng bán</span>
 <strong id="tongBan">0 bịch</strong>
 </p>
-
 <p class="big">
 <span>Tổng doanh số</span>
 <strong id="tongDoanhSo">0đ</strong>
@@ -294,60 +231,10 @@ input{
 
 </div>
 
-
-<!-- ================= DANH MỤC SẢN PHẨM ================= -->
-
-<div id="productSection" style="display:none;">
-
-<div class="card">
-
-<h2>📦 Danh mục sản phẩm</h2>
-
-<button id="btnAddProduct" class="primary">
-➕ THÊM SẢN PHẨM
-</button>
-
-
-<!-- FORM SẢN PHẨM -->
-
-<div id="productForm" style="display:none;">
-
-<label>Tên sản phẩm</label>
-<input id="productName" type="text" placeholder="Ví dụ: Bánh mì">
-
-<label>Mã sản phẩm</label>
-<input id="productCode" type="text" placeholder="Ví dụ: SP001">
-
-<label>Đơn vị tính</label>
-<input id="productUnit" type="text" placeholder="Ví dụ: bịch">
-
-<label>Giá bán</label>
-<input id="productPrice" type="number" min="0" placeholder="Nhập giá bán">
-
-<label>Số lượng tồn</label>
-<input id="productStock" type="number" min="0" placeholder="Nhập số lượng tồn">
-
-<button id="btnSaveProduct" class="save">
-💾 LƯU SẢN PHẨM
-</button>
-
-</div>
-
-
-<!-- DANH SÁCH -->
-
-<div id="productList"></div>
-
-</div>
-
-</div>
-
 </div>
 
 
 <script>
-
-/* ================= DỮ LIỆU BÁN HÀNG ================= */
 
 const KEY = "APP_BAN_HANG";
 
@@ -419,89 +306,8 @@ function tien(so){
 
 }
 
-    const tonCuoi =
-        tonDau + nhap - ban;
 
-    const doanhSo =
-        ban * gia;
-
-    const data =
-        layDuLieu();
-
-    const key =
-        maNgay(ngayDangChon);
-
-
-    data[key] = {
-
-        tonDau:tonDau,
-        nhap:nhap,
-        ban:ban,
-        gia:gia,
-        tonCuoi:tonCuoi,
-        doanhSo:doanhSo
-
-    };
-
-
-    luuDuLieu(data);
-
-    tinh();
-
-    tinhThang();
-
-    alert(
-        "✅ Đã lưu ngày!"
-    );
-
-}
-
-
-function tinhThang(){
-
-    const data =
-        layDuLieu();
-
-    const nam =
-        ngayDangChon.getFullYear();
-
-    const thang =
-        ngayDangChon.getMonth();
-
-    let tongBan = 0;
-
-    let tongDoanhSo = 0;
-
-
-    Object.keys(data).forEach(
-        function(key){
-
-            const p =
-                key.split("-");
-
-            const y =
-                Number(p[0]);
-
-            const m =
-                Number(p[1])-1;
-
-
-            if(
-                y === nam &&
-                m === thang
-            ){
-
-                tongBan +=
-                    Number(data[key].ban) || 0;
-
-                tongDoanhSo +=
-                    Number(dat
-return new Intl.NumberFormat(
-        "vi-VN"
-    ).format(so)+"đ";
-
-}
-
+/* ================= TÍNH ================= */
 
 function tinh(){
 
@@ -524,6 +330,7 @@ function tinh(){
         Number(
             document.getElementById("gia").value
         ) || 0;
+
 
     const tonCuoi =
         tonDau + nhap - ban;
@@ -553,6 +360,8 @@ function tinh(){
 }
 
 
+/* ================= NGÀY TRƯỚC ================= */
+
 function timNgayTruoc(){
 
     const data = layDuLieu();
@@ -563,13 +372,19 @@ function timNgayTruoc(){
     const keys =
         Object.keys(data)
         .filter(function(key){
+
             return key < hienTai;
+
         })
         .sort();
 
+
     if(keys.length === 0){
+
         return null;
+
     }
+
 
     return data[
         keys[keys.length-1]
@@ -578,6 +393,8 @@ function timNgayTruoc(){
 }
 
 
+/* ================= TẢI NGÀY ================= */
+
 function taiNgay(){
 
     const key =
@@ -585,6 +402,7 @@ function taiNgay(){
 
     document.getElementById("dateText").innerText =
         "📅 "+hienNgay(ngayDangChon);
+
 
     const data =
         layDuLieu();
@@ -599,7 +417,7 @@ function taiNgay(){
             data[key].nhap;
 
         document.getElementById("ban").value =
-            data[key].ban;
+data[key].ban;
 
         document.getElementById("gia").value =
             data[key].gia;
@@ -608,6 +426,7 @@ function taiNgay(){
 
         const truoc =
             timNgayTruoc();
+
 
         if(truoc){
 
@@ -619,22 +438,30 @@ function taiNgay(){
 
         }else{
 
-            document.getElementById("tonDau").value = "";
+            document.getElementById("tonDau").value =
+                "";
 
-            document.getElementById("gia").value = "";
+            document.getElementById("gia").value =
+                "";
 
         }
 
-        document.getElementById("nhap").value = 0;
 
-        document.getElementById("ban").value = "";
+        document.getElementById("nhap").value =
+            0;
+
+        document.getElementById("ban").value =
+            "";
 
     }
+
 
     tinh();
 
 }
 
+
+/* ================= ĐỔI NGÀY ================= */
 
 function doiNgay(so){
 
@@ -646,6 +473,8 @@ function doiNgay(so){
 
 }
 
+
+/* ================= LƯU NGÀY ================= */
 
 function luuNgay(){
 
@@ -668,12 +497,18 @@ function luuNgay(){
         Number(
             document.getElementById("gia").value
         ) || 0;
+
+
     if(ban > tonDau + nhap){
 
-        alert("❌ Số bán vượt quá số tồn!");
+        alert(
+            "❌ Số bán vượt quá số tồn!"
+        );
 
         return;
+
     }
+
 
     const tonCuoi =
         tonDau + nhap - ban;
@@ -681,34 +516,53 @@ function luuNgay(){
     const doanhSo =
         ban * gia;
 
+
     const data =
         layDuLieu();
 
     const key =
         maNgay(ngayDangChon);
 
+
     data[key] = {
-        tonDau: tonDau,
-        nhap: nhap,
-        ban: ban,
-        gia: gia,
-        tonCuoi: tonCuoi,
-        doanhSo: doanhSo
+
+        tonDau:tonDau,
+
+        nhap:nhap,
+
+        ban:ban,
+
+        gia:gia,
+
+        tonCuoi:tonCuoi,
+
+        doanhSo:doanhSo
+
     };
+
 
     luuDuLieu(data);
 
+
     tinh();
+
     tinhThang();
 
-    alert("✅ Đã lưu ngày!");
+
+    alert(
+        "✅ Đã lưu ngày!"
+    );
+
 }
 
+
+/* ================= DOANH SỐ THÁNG ================= */
 
 function tinhThang(){
 
     const data =
         layDuLieu();
+
 
     const nam =
         ngayDangChon.getFullYear();
@@ -716,90 +570,72 @@ function tinhThang(){
     const thang =
         ngayDangChon.getMonth();
 
+
     let tongBan = 0;
+
     let tongDoanhSo = 0;
 
-    Object.keys(data).forEach(function(key){
 
-        const p = key.split("-");
+    Object.keys(data).forEach(
+        function(key){
 
-        const y = Number(p[0]);
-        const m = Number(p[1]) - 1;
+            const p =
+                key.split("-");
 
-        if(y === nam && m === thang){
 
-            tongBan +=
-                Number(data[key].ban) || 0;
+            const y =
+                Number(p[0]);
 
-            tongDoanhSo +=
-                Number(data[key].doanhSo) || 0;
+            const m =
+                Number(p[1])-1;
+
+
+            if(
+                y === nam &&
+                m === thang
+            ){
+
+                tongBan +=
+                    Number(
+                        data[key].ban
+                    ) || 0;
+
+
+                tongDoanhSo +=
+                    Number(
+                        data[key].doanhSo
+                    ) || 0;
+
+            }
+
         }
+    );
 
-    });
 
     document.getElementById("thang").innerText =
-        "📅 Tháng " +
-        String(thang + 1).padStart(2,"0") +
-        "/" +
+        "📅 Tháng "+
+        String(thang+1).padStart(2,"0")+
+        "/"+
         nam;
 
+
     document.getElementById("tongBan").innerText =
-        tongBan + " bịch";
-
-    document.getElementById("tongDoanhSo").innerText =
+        tongBan+" bịch";
+document.getElementById("tongDoanhSo").innerText =
         tien(tongDoanhSo);
-}
-            <div>
-                    Tồn kho:
-                    ${p.stock || 0}
-                </div>
-
-                <div class="product-actions">
-
-                    <button
-                        class="delete-btn"
-                        onclick="xoaSanPham(${p.id})">
-                        🗑️ Xóa
-                    </button>
-
-                </div>
-
-            </div>
-            `;
-
-        }).join("");
 
 }
 
 
 /* ================= SỰ KIỆN ================= */
 
-document.getElementById("btnProducts")
-.addEventListener(
-    "click",
-    hienDanhMuc
-);
-
-
-document.getElementById("btnAddProduct")
-.addEventListener(
-    "click",
-    moFormSanPham
-);
-
-
-document.getElementById("btnSaveProduct")
-.addEventListener(
-    "click",
-    luuSanPham
-);
-
-
 document.getElementById("btnPrev")
 .addEventListener(
     "click",
     function(){
+
         doiNgay(-1);
+
     }
 );
 
@@ -808,7 +644,9 @@ document.getElementById("btnNext")
 .addEventListener(
     "click",
     function(){
+
         doiNgay(1);
+
     }
 );
 
@@ -850,15 +688,11 @@ document.getElementById("gia")
 
 /* ================= KHỞI ĐỘNG ================= */
 
-loadProducts();
-
 taiNgay();
-
-tinhThang();
 
 tinh();
 
-hienSanPham();
+tinhThang();
 
 
 /* ================= OFFLINE ================= */
@@ -878,56 +712,6 @@ if("serviceWorker" in navigator){
 }
 
 </script>
-<div class="product-name">
-                        ${p.name}
-                    </div>
 
-                    <div>
-                        Mã: ${p.code || "-"}
-                    </div>
-
-                    <div>
-                        Đơn vị:
-                        ${p.unit || "-"}
-                    </div>
-
-                    <div>
-                        Giá:
-                        ${tien(p.price || 0)}
-                    </div>
-
-                    <div>
-                        Tồn kho:
-                        ${p.stock || 0}
-                    </div>
-
-                    <div class="product-actions">
-
-                        <button
-                            class="delete-btn"
-                            onclick="xoaSanPham(${p.id})">
-                            🗑️ Xóa
-                        </button>
-
-                    </div>
-
-                </div>
-
-                `;
-
-            }
-        ).join("");
-
-}
-
-
-/* ================= XÓA SẢN PHẨM ================= */
-
-function xoaSanPham(id){
-
-    if(
-        !confirm(
-            "Bạn có chắc muốn xóa sản phẩm này?"
-        )
 </body>
 </html>
