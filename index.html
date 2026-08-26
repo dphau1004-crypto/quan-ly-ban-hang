@@ -1563,34 +1563,459 @@ tinh();
 
 hienThi12Thang();
 
-
 /* ================= THỐNG KÊ DOANH SỐ ================= */
 
-// DÁN TOÀN BỘ CODE THỐNG KÊ TÔI GỬI Ở ĐÂY
+let namTKDangXem = new Date().getFullYear();
+let thangTKDangMo = null;
+
+function layTongBanHangTK(nam, thang){
+
+    const data = layDuLieu();
+    let tong = 0;
+
+    Object.keys(data).forEach(function(key){
+
+        const p = key.split("-");
+        const y = Number(p[0]);
+        const m = Number(p[1]) - 1;
+
+        if(y === nam && m === thang){
+            tong += Number(data[key].doanhSo) || 0;
+        }
+
+    });
+
+    return tong;
+}
 
 
-/* ================= OFFLINE ================= */
+function layTongNhapHangTK(nam, thang){
 
-if("serviceWorker" in navigator){
+    const data = layDuLieuNhap();
+    let tong = 0;
+
+    Object.keys(data).forEach(function(key){
+
+        const p = key.split("-");
+        const y = Number(p[0]);
+        const m = Number(p[1]) - 1;
+
+        if(y === nam && m === thang){
+
+            (data[key].items || []).forEach(function(x){
+
+                tong +=
+                    (Number(x.soLuong) || 0) *
+                    (Number(x.donGia) || 0);
+
+            });
+
+        }
+
+    });
+
+    return tong;
+}
+
+
+function hienThi12ThangTK(){
+
+    document.getElementById("namTKHienTai").innerText =
+        "Năm " + namTKDangXem;
+
+    let html = "";
+
+    for(let i = 0; i < 12; i++){
+
+        const ban =
+            layTongBanHangTK(
+                namTKDangXem,
+                i
+            );
+
+        const nhap =
+            layTongNhapHangTK(
+                namTKDangXem,
+                i
+            );
+
+        const doanhSo = ban - nhap;
+
+        const active =
+            thangTKDangMo === i
+            ? " active"
+            : "";
+
+        html += `
+            <button
+                class="thangBtn${active}"
+                onclick="moThangTK(${i})"
+            >
+                T${String(i + 1).padStart(2,"0")}
+
+                <span class="thangDoanhSo">
+                    ${tien(doanhSo)}
+                </span>
+            </button>
+        `;
+
+    }
+
+    document.getElementById("dsThangTK").innerHTML =
+        html;
+}
+
+
+function moThangTK(thang){
+
+    if(thangTKDangMo === thang){
+
+        thangTKDangMo = null;
+
+        document.getElementById(
+            "chiTietTK"
+        ).classList.remove("hien");
+
+        hienThi12ThangTK();
+
+        return;
+    }
+
+    thangTKDangMo = thang;
+
+    hienThi12ThangTK();
+
+    hienChiTietTK(thang);
+}
+
+
+function hienChiTietTK(thang){
+
+    const tongBan =
+        layTongBanHangTK(
+            namTKDangXem,
+            thang
+        );
+
+    const tongNhap =
+        layTongNhapHangTK(
+            namTKDangXem,
+            thang
+        );
+
+    const doanhSo =
+        tongBan - tongNhap;
+
+
+    document.getElementById(
+        "tieuDeChiTietTK"
+    ).innerText =
+        "📅 Thống kê tháng " +
+        String(thang + 1).padStart(2,"0") +
+        "/" +
+        namTKDangXem;
+
+
+    document.getElementById(
+        "tongBanTK"
+    ).innerText =
+        tien(tongBan);
+
+
+    document.getElementById(
+        "tongNhapTK"
+    ).innerText =
+        tien(tongNhap);
+
+
+    document.getElementById(
+        "doanhSoTK"
+    ).innerText =
+        tien(doanhSo);
+
+
+    const dsNgay =
+        document.getElementById(
+            "danhSachNgayTK"
+        );
+
+
+    const dataBan = layDuLieu();
+    const dataNhap = layDuLieuNhap();
+
+    let ngay = {};
+
+
+    Object.keys(dataBan).forEach(function(key){
+
+        const p = key.split("-");
+
+        const y = Number(p[0]);
+        const m = Number(p[1]) - 1;
+
+        if(
+            y === namTKDangXem &&
+            m === thang
+        ){
+
+            ngay[key] = ngay[key] || {
+                ban:0,
+                nhap:0
+            };
+
+            ngay[key].ban +=
+                Number(dataBan[key].doanhSo) || 0;
+        }
+
+    });
+
+
+    Object.keys(dataNhap).forEach(function(key){
+
+        const p = key.split("-");
+
+        const y = Number(p[0]);
+        const m = Number(p[1]) - 1;
+
+        if(
+            y === namTKDangXem &&
+            m === thang
+        ){
+
+            ngay[key] = ngay[key] || {
+                ban:0,
+                nhap:0
+            };
+
+            (dataNhap[key].items || [])
+            .forEach(function(x){
+
+                ngay[key].nhap +=
+                    (Number(x.soLuong) || 0) *
+                    (Number(x.donGia) || 0);
+
+            });
+
+        }
+
+    });
+
+
+    const keys =
+        Object.keys(ngay).sort();
+
+
+    if(keys.length === 0){
+
+        dsNgay.innerHTML =
+            '<div class="khongCo">Chưa có dữ liệu trong tháng này</div>';
+
+    }else{
+
+        let html = "";
+
+        keys.forEach(function(key){
+
+            const p = key.split("-");
+
+            const ketQua =
+                ngay[key].ban -
+                ngay[key].nhap;
+
+            html += `
+                <div class="ngayItem">
+
+                    <div>
+
+                        <div class="ngay">
+                            📅 ${p[2]}/${p[1]}/${p[0]}
+                        </div>
+
+                        <div class="soBan">
+                            Bán: ${tien(ngay[key].ban)}
+                        </div>
+
+                        <div class="soBan">
+                            Nhập: ${tien(ngay[key].nhap)}
+                        </div>
+
+                    </div>
+
+                    <div class="doanhSoNgay">
+                        ${tien(ketQua)}
+                    </div>
+
+                </div>
+            `;
+
+        });
+
+        dsNgay.innerHTML = html;
+    }
+
+
+    document.getElementById(
+        "chiTietTK"
+    ).classList.add("hien");
+}
+
+
+function doiNamTK(so){
+
+    namTKDangXem += so;
+
+    thangTKDangMo = null;
+
+    document.getElementById(
+        "chiTietTK"
+    ).classList.remove("hien");
+
+    hienThi12ThangTK();
+}
+
+
+/* ================= NÚT BÁN HÀNG ================= */
+
+document.getElementById("btnBanHang").onclick =
+function(){
+
+    document.getElementById(
+        "trangBanHang"
+    ).classList.add("active");
+
+    document.getElementById(
+        "trangNhapHang"
+    ).classList.remove("active");
+
+    document.getElementById(
+        "trangThongKe"
+    ).classList.remove("active");
+
+
+    document.getElementById(
+        "btnBanHang"
+    ).classList.add("active");
+
+    document.getElementById(
+        "btnNhapHang"
+    ).classList.remove("active");
+
+    document.getElementById(
+        "btnThongKe"
+    ).classList.remove("active");
+};
+
+
+/* ================= NÚT NHẬP HÀNG ================= */
+
+document.getElementById("btnNhapHang").onclick =
+function(){
+
+    document.getElementById(
+        "trangNhapHang"
+    ).classList.add("active");
+
+    document.getElementById(
+        "trangBanHang"
+    ).classList.remove("active");
+
+    document.getElementById(
+        "trangThongKe"
+    ).classList.remove("active");
+
+
+    document.getElementById(
+        "btnNhapHang"
+    ).classList.add("active");
+
+    document.getElementById(
+        "btnBanHang"
+    ).classList.remove("active");
+
+    document.getElementById(
+        "btnThongKe"
+    ).classList.remove("active");
+
+
+    hienNhapNgay();
+    hienThi12ThangNhap();
+};
+
+
+/* ================= NÚT THỐNG KÊ ================= */
+
+document.getElementById("btnThongKe").onclick =
+function(){
+
+    document.getElementById(
+        "trangThongKe"
+    ).classList.add("active");
+
+    document.getElementById(
+        "trangBanHang"
+    ).classList.remove("active");
+
+    document.getElementById(
+        "trangNhapHang"
+    ).classList.remove("active");
+
+
+    document.getElementById(
+        "btnThongKe"
+    ).classList.add("active");
+
+    document.getElementById(
+        "btnBanHang"
+    ).classList.remove("active");
+
+    document.getElementById(
+        "btnNhapHang"
+    ).classList.remove("active");
+
+
+    hienThi12ThangTK();
+};
+
+
+/* ================= ĐỔI NĂM THỐNG KÊ ================= */
+
+document.getElementById("btnNamTKTruoc").onclick =
+function(){
+
+    doiNamTK(-1);
+
+};
+
+
+document.getElementById("btnNamTKSau").onclick =
+function(){
+
+    doiNamTK(1);
+
+};
+
+
+/* ================= KHỞI ĐỘNG ================= */
+
+hienThi12ThangTK();
+
+
 /* ================= OFFLINE ================= */
 
 if("serviceWorker" in navigator){
 
     navigator.serviceWorker.register(
         "./sw.js"
-    ).catch(
-        function(error){
+    ).catch(function(error){
 
-            console.log(
-                "Service Worker:",
-                error
-            );
+        console.log(
+            "Service Worker:",
+            error
+        );
 
-        }
-    );
+    });
 
 }
-
 </script>
 
 </body>
