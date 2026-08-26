@@ -214,12 +214,33 @@ input{
     font-size:18px;
 }
 
+
+.menu{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:15px}
+.menuBtn{border:0;padding:13px;border-radius:10px;background:#e5e7eb;font-weight:bold;font-size:16px;cursor:pointer}
+.menuBtn.active{background:#111827;color:white}
+.trang{display:none}
+.trang.active{display:block}
+.nhapTable{width:100%;border-collapse:collapse;margin-top:15px}
+.nhapTable th,.nhapTable td{border:1px solid #ddd;padding:8px;text-align:center}
+.nhapTable th{background:#f3f4f6}
+.nhapTable input{margin:0;padding:8px;font-size:15px}
+.xoaDong{border:0;background:#fee2e2;padding:8px;border-radius:7px;cursor:pointer}
+.themDong{width:100%;padding:12px;border:0;border-radius:9px;background:#e5e7eb;font-weight:bold;margin-top:10px}
+
 </style>
 </head>
 
 <body>
 
 <div class="container">
+
+<div class="menu">
+    <button id="btnBanHang" class="menuBtn active">🥡 Quản lý bán hàng</button>
+    <button id="btnNhapHang" class="menuBtn">📦 Nhập hàng</button>
+</div>
+
+
+<div id="trangBanHang" class="trang active">
 
 <div class="card">
 
@@ -1157,6 +1178,126 @@ document.getElementById(
     tinh
 );
 
+
+/* ================= NHẬP HÀNG ================= */
+const KEY_NHAP = "APP_NHAP_HANG";
+let ngayNhapDangChon = new Date();
+let namNhapDangXem = ngayNhapDangChon.getFullYear();
+let thangNhapDangMo = null;
+let dsNhapHienTai = [];
+
+function layDuLieuNhap(){
+    try{return JSON.parse(localStorage.getItem(KEY_NHAP)) || {};}
+    catch(e){return {};}
+}
+function luuDuLieuNhap(data){localStorage.setItem(KEY_NHAP,JSON.stringify(data));}
+function maNgayNhap(d){
+    return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0");
+}
+function hienNgayNhap(d){
+    return d.toLocaleDateString("vi-VN",{weekday:"long",day:"2-digit",month:"2-digit",year:"numeric"});
+}
+function tienNhap(n){return new Intl.NumberFormat("vi-VN").format(n)+"đ";}
+
+function hienNhapNgay(){
+    document.getElementById("ngayNhapText").innerText="📅 "+hienNgayNhap(ngayNhapDangChon);
+    const data=layDuLieuNhap(), key=maNgayNhap(ngayNhapDangChon);
+    dsNhapHienTai=data[key] ? data[key].items : [];
+    hienBangNhap();
+}
+function hienBangNhap(){
+    const tb=document.getElementById("dsHangNhap");
+    let total=0, html="";
+    dsNhapHienTai.forEach((x,i)=>{
+        const thanh=(Number(x.soLuong)||0)*(Number(x.donGia)||0);
+        total+=thanh;
+        html+=`<tr><td>${x.donVi}</td><td>${x.maHang}</td><td>${x.soLuong}</td><td>${tienNhap(x.donGia)}</td><td>${tienNhap(thanh)}</td><td><button class="xoaDong" onclick="xoaDongNhap(${i})">✕</button></td></tr>`;
+    });
+    tb.innerHTML=html || `<tr><td colspan="6" class="khongCo">Chưa có hàng nhập trong ngày</td></tr>`;
+    document.getElementById("tongMatHangNhap").innerText=dsNhapHienTai.length;
+    document.getElementById("tongTienNhap").innerText=tienNhap(total);
+}
+function themDongNhap(){
+    const donVi=document.getElementById("donViNhap").value.trim();
+    const maHang=document.getElementById("maHangNhap").value.trim();
+    const soLuong=Number(document.getElementById("soLuongNhap").value)||0;
+    const donGia=Number(document.getElementById("donGiaNhap").value)||0;
+    if(!donVi || !maHang || soLuong<=0 || donGia<0){alert("❌ Vui lòng nhập đủ đơn vị tính, mã hàng, số lượng và đơn giá!");return;}
+    dsNhapHienTai.push({donVi,maHang,soLuong,donGia});
+    ["donViNhap","maHangNhap"].forEach(id=>document.getElementById(id).value="");
+    document.getElementById("soLuongNhap").value=0;
+    document.getElementById("donGiaNhap").value=0;
+    hienBangNhap();
+}
+function xoaDongNhap(i){dsNhapHienTai.splice(i,1);hienBangNhap();}
+function luuNhap(){
+    const data=layDuLieuNhap(), key=maNgayNhap(ngayNhapDangChon);
+    data[key]={items:dsNhapHienTai};
+    luuDuLieuNhap(data);
+    hienThi12ThangNhap();
+    if(thangNhapDangMo!==null) hienChiTietThangNhap(thangNhapDangMo);
+    alert("✅ Đã lưu nhập hàng ngày!");
+}
+function doiNgayNhap(so){ngayNhapDangChon.setDate(ngayNhapDangChon.getDate()+so);hienNhapNgay();}
+function tongNhapThang(nam,thang){
+    const data=layDuLieuNhap(); let tong=0;
+    Object.keys(data).forEach(k=>{
+        const p=k.split("-"), y=Number(p[0]), m=Number(p[1])-1;
+        if(y===nam && m===thang) (data[k].items||[]).forEach(x=>tong+=(Number(x.soLuong)||0)*(Number(x.donGia)||0));
+    });
+    return tong;
+}
+function hienThi12ThangNhap(){
+    document.getElementById("namNhapHienTai").innerText="Năm "+namNhapDangXem;
+    let html="";
+    for(let i=0;i<12;i++){
+        const active=thangNhapDangMo===i?" active":"";
+        html+=`<button class="thangBtn${active}" onclick="moThangNhap(${i})">T${String(i+1).padStart(2,"0")}<span class="thangDoanhSo">${tienNhap(tongNhapThang(namNhapDangXem,i))}</span></button>`;
+    }
+    document.getElementById("dsThangNhap").innerHTML=html;
+}
+function moThangNhap(thang){
+    if(thangNhapDangMo===thang){thangNhapDangMo=null;document.getElementById("chiTietNhap").classList.remove("hien");hienThi12ThangNhap();return;}
+    thangNhapDangMo=thang;hienThi12ThangNhap();hienChiTietThangNhap(thang);
+}
+function hienChiTietThangNhap(thang){
+    const data=layDuLieuNhap(); let rows="", tong=0, count=0;
+    Object.keys(data).sort().forEach(k=>{
+        const p=k.split("-"), y=Number(p[0]), m=Number(p[1])-1;
+        if(y===namNhapDangXem && m===thang){
+            let day=0;
+            (data[k].items||[]).forEach(x=>day+=(Number(x.soLuong)||0)*(Number(x.donGia)||0));
+            tong+=day; count++;
+            rows+=`<div class="ngayItem"><div><div class="ngay">📅 ${p[2]}/${p[1]}/${p[0]}</div><div class="soBan">${data[k].items.length} mặt hàng</div></div><div class="doanhSoNgay">${tienNhap(day)}</div></div>`;
+        }
+    });
+    document.getElementById("tieuDeChiTietNhap").innerText="📅 Chi tiết tháng "+String(thang+1).padStart(2,"0")+"/"+namNhapDangXem;
+    document.getElementById("danhSachNgayNhap").innerHTML=rows||'<div class="khongCo">Chưa có dữ liệu trong tháng này</div>';
+    document.getElementById("tongTienNhapThang").innerText=tienNhap(tong);
+    document.getElementById("chiTietNhap").classList.add("hien");
+}
+function doiNamNhap(so){namNhapDangXem+=so;thangNhapDangMo=null;document.getElementById("chiTietNhap").classList.remove("hien");hienThi12ThangNhap();}
+
+document.getElementById("btnBanHang").onclick=()=>{
+    document.getElementById("trangBanHang").classList.add("active");
+    document.getElementById("trangNhapHang").classList.remove("active");
+    document.getElementById("btnBanHang").classList.add("active");
+    document.getElementById("btnNhapHang").classList.remove("active");
+};
+document.getElementById("btnNhapHang").onclick=()=>{
+    document.getElementById("trangNhapHang").classList.add("active");
+    document.getElementById("trangBanHang").classList.remove("active");
+    document.getElementById("btnNhapHang").classList.add("active");
+    document.getElementById("btnBanHang").classList.remove("active");
+    hienNhapNgay();hienThi12ThangNhap();
+};
+document.getElementById("btnThemDongNhap").onclick=themDongNhap;
+document.getElementById("btnLuuNhap").onclick=luuNhap;
+document.getElementById("btnNhapPrev").onclick=()=>doiNgayNhap(-1);
+document.getElementById("btnNhapNext").onclick=()=>doiNgayNhap(1);
+document.getElementById("btnNamNhapTruoc").onclick=()=>doiNamNhap(-1);
+document.getElementById("btnNamNhapSau").onclick=()=>doiNamNhap(1);
+hienNhapNgay();hienThi12ThangNhap();
 
 /* ================= KHỞI ĐỘNG ================= */
 
