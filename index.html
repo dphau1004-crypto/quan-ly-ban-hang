@@ -386,6 +386,63 @@ input{
 </div>
 
 
+</div><!-- hết trangBanHang -->
+
+<div id="trangNhapHang" class="trang">
+<div class="card">
+<h1>📦 Nhập hàng</h1>
+
+<div class="date">
+<button id="btnNhapPrev">◀</button>
+<div id="ngayNhapText" class="dateText"></div>
+<button id="btnNhapNext">▶</button>
+</div>
+
+<div class="grid">
+<div><label>Đơn vị tính</label><input id="donViNhap" type="text" placeholder="Cái, thùng..."></div>
+<div><label>Mã hàng</label><input id="maHangNhap" type="text" placeholder="Mã hàng"></div>
+<div><label>Số lượng</label><input id="soLuongNhap" type="number" min="0" value="0"></div>
+<div><label>Đơn giá</label><input id="donGiaNhap" type="number" min="0" value="0"></div>
+</div>
+
+<button id="btnThemDongNhap" class="themDong">➕ THÊM HÀNG</button>
+
+<div style="overflow-x:auto">
+<table class="nhapTable">
+<thead><tr><th>ĐVT</th><th>Mã hàng</th><th>SL</th><th>Đơn giá</th><th>Thành tiền</th><th></th></tr></thead>
+<tbody id="dsHangNhap"></tbody>
+</table>
+</div>
+
+<div class="result">
+<p><span>Số mặt hàng</span><strong id="tongMatHangNhap">0</strong></p>
+<p class="big"><span>Tổng tiền nhập</span><strong id="tongTienNhap">0đ</strong></p>
+</div>
+
+<button id="btnLuuNhap" class="save">💾 LƯU NGÀY</button>
+</div>
+
+<div class="card">
+<h3>📊 Tổng nhập theo tháng</h3>
+<div class="namDieuKhien">
+<button id="btnNamNhapTruoc">◀</button>
+<div id="namNhapHienTai" class="thangNam"></div>
+<button id="btnNamNhapSau">▶</button>
+</div>
+
+<div id="dsThangNhap" class="dsThang"></div>
+
+<div id="chiTietNhap" class="chiTiet">
+<div id="tieuDeChiTietNhap" class="tieuDeChiTiet"></div>
+<div id="danhSachNgayNhap"></div>
+<div class="result">
+<p class="big"><span>Tổng tiền nhập tháng</span><strong id="tongTienNhapThang">0đ</strong></p>
+</div>
+</div>
+</div>
+</div>
+
+
 <script>
 
 const KEY = "APP_BAN_HANG";
