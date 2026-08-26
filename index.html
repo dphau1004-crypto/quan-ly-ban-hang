@@ -465,7 +465,24 @@ input{
 </div>
 </div>
 </div>
+<div class="card">
+    <h3>💾 Dữ liệu</h3>
 
+    <button id="btnSaoLuu" class="save">
+        💾 SAO LƯU DỮ LIỆU
+    </button>
+
+    <button id="btnKhoiPhuc" class="save">
+        📂 KHÔI PHỤC DỮ LIỆU
+    </button>
+
+    <input
+        id="fileKhoiPhuc"
+        type="file"
+        accept=".json"
+        style="display:none"
+    >
+</div>
 
 <script>
 
@@ -1381,6 +1398,107 @@ document.getElementById("btnNamNhapSau").onclick=()=>doiNamNhap(1);
 hienNhapNgay();hienThi12ThangNhap();
 
 /* ================= KHỞI ĐỘNG ================= */
+    /* ================= SAO LƯU / KHÔI PHỤC ================= */
+
+document.getElementById("btnSaoLuu").onclick = function(){
+
+    const backup = {
+        banHang: layDuLieu(),
+        nhapHang: layDuLieuNhap(),
+        ngaySaoLuu: new Date().toISOString()
+    };
+
+    const blob = new Blob(
+        [JSON.stringify(backup, null, 2)],
+        {type:"application/json"}
+    );
+
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+
+    a.href = url;
+    a.download =
+        "quan-ly-ban-hang-backup-" +
+        maNgay(new Date()) +
+        ".json";
+
+    a.click();
+
+    URL.revokeObjectURL(url);
+
+    alert("✅ Đã sao lưu dữ liệu!");
+};
+
+
+document.getElementById("btnKhoiPhuc").onclick = function(){
+
+    document.getElementById("fileKhoiPhuc").click();
+
+};
+
+
+document.getElementById("fileKhoiPhuc").addEventListener(
+    "change",
+    function(e){
+
+        const file = e.target.files[0];
+
+        if(!file) return;
+
+        const reader = new FileReader();
+
+        reader.onload = function(){
+
+            try{
+
+                const backup =
+                    JSON.parse(reader.result);
+
+                if(
+                    !backup.banHang ||
+                    !backup.nhapHang
+                ){
+
+                    alert("❌ File sao lưu không hợp lệ!");
+
+                    return;
+                }
+
+                if(
+                    !confirm(
+                        "Khôi phục sẽ thay dữ liệu hiện tại. Tiếp tục?"
+                    )
+                ){
+
+                    return;
+                }
+
+                localStorage.setItem(
+                    KEY,
+                    JSON.stringify(backup.banHang)
+                );
+
+                localStorage.setItem(
+                    KEY_NHAP,
+                    JSON.stringify(backup.nhapHang)
+                );
+
+                alert("✅ Đã khôi phục dữ liệu!");
+
+                location.reload();
+
+            }catch(error){
+
+                alert("❌ File sao lưu không hợp lệ!");
+
+            }
+
+        };
+
+        reader.readAsText(file);
+
+    }
+);
 
 taiNgay();
 
