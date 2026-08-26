@@ -235,8 +235,9 @@ input{
 <div class="container">
 
 <div class="menu">
-    <button id="btnBanHang" class="menuBtn active">🥡 Quản lý bán hàng</button>
+    <button id="btnBanHang" class="menuBtn active">🥡 Bán hàng</button>
     <button id="btnNhapHang" class="menuBtn">📦 Nhập hàng</button>
+    <button id="btnThongKe" class="menuBtn">📊 Thống kê</button>
 </div>
 
 
@@ -464,6 +465,56 @@ input{
 </div>
 </div>
 </div>
+</div>
+    <!-- ================= THỐNG KÊ DOANH SỐ ================= -->
+
+<div id="trangThongKe" class="trang">
+
+<div class="card">
+
+<h1>📊 Thống kê doanh số</h1>
+
+<div class="namDieuKhien">
+
+<button id="btnNamTKTruoc">◀</button>
+
+<div id="namTKHienTai" class="thangNam"></div>
+
+<button id="btnNamTKSau">▶</button>
+
+</div>
+
+<div id="dsThangTK" class="dsThang"></div>
+
+<div id="chiTietTK" class="chiTiet">
+
+<div id="tieuDeChiTietTK" class="tieuDeChiTiet"></div>
+
+<div class="result">
+
+<p>
+<span>💰 Tổng bán hàng</span>
+<strong id="tongBanTK">0đ</strong>
+</p>
+
+<p>
+<span>📦 Tổng nhập hàng</span>
+<strong id="tongNhapTK">0đ</strong>
+</p>
+
+<p class="big">
+<span>📊 Doanh số</span>
+<strong id="doanhSoTK">0đ</strong>
+</p>
+
+</div>
+
+<div id="danhSachNgayTK"></div>
+
+</div>
+
+</div>
+
 </div>
 <div class="card">
     <h3>💾 Dữ liệu</h3>
@@ -1506,7 +1557,21 @@ tinh();
 
 hienThi12Thang();
 
+taiNgay();
 
+tinh();
+
+hienThi12Thang();
+
+
+/* ================= THỐNG KÊ DOANH SỐ ================= */
+
+// DÁN TOÀN BỘ CODE THỐNG KÊ TÔI GỬI Ở ĐÂY
+
+
+/* ================= OFFLINE ================= */
+
+if("serviceWorker" in navigator){
 /* ================= OFFLINE ================= */
 
 if("serviceWorker" in navigator){
