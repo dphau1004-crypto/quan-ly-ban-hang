@@ -110,6 +110,60 @@ input{
     font-size:32px;
     font-weight:bold;
 }
+
+/* ===== DOANH SỐ THÁNG ===== */
+
+.thangButton{
+    width:100%;
+    border:0;
+    background:#f3f4f6;
+    padding:15px;
+    border-radius:10px;
+    font-size:17px;
+    font-weight:bold;
+    text-align:left;
+    cursor:pointer;
+}
+
+.chiTietThang{
+    display:none;
+    margin-top:12px;
+}
+
+.chiTietThang.hien{
+    display:block;
+}
+
+.ngayItem{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    padding:12px;
+    margin-bottom:8px;
+    background:#f3f4f6;
+    border-radius:8px;
+}
+
+.ngay{
+    font-weight:bold;
+}
+
+.banNgay{
+    font-size:14px;
+    color:#666;
+    margin-top:4px;
+}
+
+.doanhSoNgay{
+    font-weight:bold;
+    text-align:right;
+}
+
+.khongCoDuLieu{
+    text-align:center;
+    color:#777;
+    padding:15px;
+}
 </style>
 </head>
 
@@ -210,11 +264,24 @@ input{
 </div>
 
 
+<!-- ================= DOANH SỐ THÁNG ================= -->
+
 <div class="card">
 
 <h3>📊 Doanh số tháng</h3>
 
-<div id="thang"></div>
+<button id="btnThang" class="thangButton">
+📅 <span id="thang"></span>
+<span style="float:right;">▼</span>
+</button>
+
+
+<div id="chiTietThang" class="chiTietThang">
+
+<div id="danhSachNgay"></div>
+
+</div>
+
 
 <div class="result">
 
@@ -222,6 +289,7 @@ input{
 <span>Tổng bán</span>
 <strong id="tongBan">0 bịch</strong>
 </p>
+
 <p class="big">
 <span>Tổng doanh số</span>
 <strong id="tongDoanhSo">0đ</strong>
@@ -240,6 +308,10 @@ const KEY = "APP_BAN_HANG";
 
 let ngayDangChon = new Date();
 
+let dangMoChiTiet = false;
+
+
+/* ================= DỮ LIỆU ================= */
 
 function layDuLieu(){
 
@@ -254,6 +326,7 @@ function layDuLieu(){
     }catch(e){
         return {};
     }
+
 }
 
 
@@ -266,6 +339,8 @@ function luuDuLieu(data){
 
 }
 
+
+/* ================= NGÀY ================= */
 
 function maNgay(date){
 
@@ -280,6 +355,7 @@ function maNgay(date){
     ).padStart(2,"0");
 
     return y+"-"+m+"-"+d;
+
 }
 
 
@@ -380,9 +456,7 @@ function timNgayTruoc(){
 
 
     if(keys.length === 0){
-
         return null;
-
     }
 
 
@@ -399,6 +473,7 @@ function taiNgay(){
 
     const key =
         maNgay(ngayDangChon);
+
 
     document.getElementById("dateText").innerText =
         "📅 "+hienNgay(ngayDangChon);
@@ -417,7 +492,7 @@ function taiNgay(){
             data[key].nhap;
 
         document.getElementById("ban").value =
-data[key].ban;
+            data[key].ban;
 
         document.getElementById("gia").value =
             data[key].gia;
@@ -520,6 +595,7 @@ function luuNgay(){
     const data =
         layDuLieu();
 
+
     const key =
         maNgay(ngayDangChon);
 
@@ -575,6 +651,8 @@ function tinhThang(){
 
     let tongDoanhSo = 0;
 
+    let danhSach = [];
+
 
     Object.keys(data).forEach(
         function(key){
@@ -595,16 +673,31 @@ function tinhThang(){
                 m === thang
             ){
 
-                tongBan +=
+                const ban =
                     Number(
                         data[key].ban
                     ) || 0;
 
-
-                tongDoanhSo +=
+                const doanhSo =
                     Number(
                         data[key].doanhSo
                     ) || 0;
+
+
+                tongBan += ban;
+
+                tongDoanhSo += doanhSo;
+
+
+                danhSach.push({
+
+                    key:key,
+
+                    ban:ban,
+
+                    doanhSo:doanhSo
+
+                });
 
             }
 
@@ -612,8 +705,17 @@ function tinhThang(){
     );
 
 
+    danhSach.sort(
+        function(a,b){
+
+            return a.key.localeCompare(b.key);
+
+        }
+    );
+
+
     document.getElementById("thang").innerText =
-        "📅 Tháng "+
+        "Tháng "+
         String(thang+1).padStart(2,"0")+
         "/"+
         nam;
@@ -621,8 +723,113 @@ function tinhThang(){
 
     document.getElementById("tongBan").innerText =
         tongBan+" bịch";
-document.getElementById("tongDoanhSo").innerText =
+
+
+    document.getElementById("tongDoanhSo").innerText =
         tien(tongDoanhSo);
+
+
+    const danhSachNgay =
+        document.getElementById("danhSachNgay");
+
+
+    if(danhSach.length === 0){
+
+        danhSachNgay.innerHTML =
+            '<div class="khongCoDuLieu">Chưa có dữ liệu trong tháng này</div>';
+
+        return;
+
+    }
+
+
+    let html = "";
+
+
+    danhSach.forEach(
+        function(item){
+
+            const parts =
+                item.key.split("-");
+
+
+            const ngay =
+                parts[2]+"/"+
+                parts[1]+"/"+
+                parts[0];
+
+
+            html += `
+
+            <div class="ngayItem">
+
+                <div>
+
+                    <div class="ngay">
+                        📅 ${ngay}
+                    </div>
+
+                    <div class="banNgay">
+                        Đã bán: ${item.ban} bịch
+                    </div>
+
+                </div>
+
+                <div class="doanhSoNgay">
+                    ${tien(item.doanhSo)}
+                </div>
+
+            </div>
+
+            `;
+
+        }
+    );
+
+
+    danhSachNgay.innerHTML =
+        html;
+
+}
+
+
+/* ================= MỞ CHI TIẾT ================= */
+
+function moChiTietThang(){
+
+    dangMoChiTiet =
+        !dangMoChiTiet;
+
+
+    const box =
+        document.getElementById("chiTietThang");
+
+
+    const button =
+        document.getElementById("btnThang");
+
+
+    if(dangMoChiTiet){
+
+        box.classList.add("hien");
+
+        button.innerHTML =
+            '📅 <span id="thang">'+
+            document.getElementById("thang").innerText+
+            '</span>'+
+            '<span style="float:right;">▲</span>';
+
+    }else{
+
+        box.classList.remove("hien");
+
+        button.innerHTML =
+            '📅 <span id="thang">'+
+            document.getElementById("thang").innerText+
+            '</span>'+
+            '<span style="float:right;">▼</span>';
+
+    }
 
 }
 
@@ -655,6 +862,13 @@ document.getElementById("btnSaveDay")
 .addEventListener(
     "click",
     luuNgay
+);
+
+
+document.getElementById("btnThang")
+.addEventListener(
+    "click",
+    moChiTietThang
 );
 
 
