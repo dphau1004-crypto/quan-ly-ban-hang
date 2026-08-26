@@ -424,7 +424,16 @@ input{
 
 <div style="overflow-x:auto">
 <table class="nhapTable">
-<thead><tr><th>ĐVT</th><th>Mã hàng</th><th>SL</th><th>Đơn giá</th><th>Thành tiền</th><th></th></tr></thead>
+<thead>
+<tr>
+    <th>Mã hàng</th>
+    <th>ĐVT</th>
+    <th>Số lượng</th>
+    <th>Đơn giá</th>
+    <th>Thành tiền</th>
+    <th></th>
+</tr>
+</thead>
 <tbody id="dsHangNhap"></tbody>
 </table>
 </div>
@@ -1283,7 +1292,7 @@ function hienBangNhap(){
     dsNhapHienTai.forEach((x,i)=>{
         const thanh=(Number(x.soLuong)||0)*(Number(x.donGia)||0);
         total+=thanh;
-        html+=`<tr><td>${x.donVi}</td><td>${x.maHang}</td><td>${x.soLuong}</td><td>${tienNhap(x.donGia)}</td><td>${tienNhap(thanh)}</td><td><button class="xoaDong" onclick="xoaDongNhap(${i})">✕</button></td></tr>`;
+        html+=`<tr><td>${x.maHang}</td><td>${x.donVi}</td><td>${x.soLuong}</td><td>${tienNhap(x.donGia)}</td><td>${tienNhap(thanh)}</td><td><button class="xoaDong" onclick="xoaDongNhap(${i})">✕</button></td></tr>`;
     });
     tb.innerHTML=html || `<tr><td colspan="6" class="khongCo">Chưa có hàng nhập trong ngày</td></tr>`;
     document.getElementById("tongMatHangNhap").innerText=dsNhapHienTai.length;
