@@ -111,27 +111,61 @@ input{
     font-weight:bold;
 }
 
-/* ===== DOANH SỐ THÁNG ===== */
 
-.thangButton{
-    width:100%;
+/* ================= 12 THÁNG ================= */
+
+.thangNam{
+    text-align:center;
+    font-size:20px;
+    font-weight:bold;
+    margin-bottom:15px;
+}
+
+.dsThang{
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:10px;
+}
+
+.thangBtn{
     border:0;
     background:#f3f4f6;
-    padding:15px;
+    padding:12px 5px;
     border-radius:10px;
-    font-size:17px;
-    font-weight:bold;
-    text-align:left;
     cursor:pointer;
+    font-weight:bold;
+    font-size:15px;
 }
 
-.chiTietThang{
-    display:none;
-    margin-top:12px;
+.thangBtn:active{
+    transform:scale(.97);
 }
 
-.chiTietThang.hien{
+.thangBtn.active{
+    background:#111827;
+    color:white;
+}
+
+.thangDoanhSo{
     display:block;
+    font-size:13px;
+    margin-top:5px;
+    font-weight:normal;
+}
+
+.chiTiet{
+    display:none;
+    margin-top:15px;
+}
+
+.chiTiet.hien{
+    display:block;
+}
+
+.tieuDeChiTiet{
+    font-weight:bold;
+    font-size:18px;
+    margin-bottom:10px;
 }
 
 .ngayItem{
@@ -139,19 +173,19 @@ input{
     justify-content:space-between;
     align-items:center;
     padding:12px;
-    margin-bottom:8px;
     background:#f3f4f6;
-    border-radius:8px;
+    border-radius:10px;
+    margin-bottom:8px;
 }
 
 .ngay{
     font-weight:bold;
 }
 
-.banNgay{
+.soBan{
     font-size:14px;
     color:#666;
-    margin-top:4px;
+    margin-top:5px;
 }
 
 .doanhSoNgay{
@@ -159,11 +193,27 @@ input{
     text-align:right;
 }
 
-.khongCoDuLieu{
+.khongCo{
     text-align:center;
     color:#777;
     padding:15px;
 }
+
+.namDieuKhien{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    margin-bottom:15px;
+}
+
+.namDieuKhien button{
+    border:0;
+    background:#f3f4f6;
+    padding:8px 14px;
+    border-radius:8px;
+    font-size:18px;
+}
+
 </style>
 </head>
 
@@ -264,36 +314,49 @@ input{
 </div>
 
 
-<!-- ================= DOANH SỐ THÁNG ================= -->
+<!-- ================= DOANH SỐ NĂM ================= -->
 
 <div class="card">
 
-<h3>📊 Doanh số tháng</h3>
-
-<button id="btnThang" class="thangButton">
-📅 <span id="thang"></span>
-<span style="float:right;">▼</span>
-</button>
+<h3>📊 Doanh số năm</h3>
 
 
-<div id="chiTietThang" class="chiTietThang">
+<div class="namDieuKhien">
 
-<div id="danhSachNgay"></div>
+<button id="btnNamTruoc">◀</button>
+
+<div id="namHienTai" class="thangNam"></div>
+
+<button id="btnNamSau">▶</button>
 
 </div>
+
+
+<div id="dsThang" class="dsThang"></div>
+
+
+<!-- CHI TIẾT THÁNG -->
+
+<div id="chiTiet" class="chiTiet">
+
+<div id="tieuDeChiTiet" class="tieuDeChiTiet"></div>
+
+<div id="danhSachNgay"></div>
 
 
 <div class="result">
 
 <p>
 <span>Tổng bán</span>
-<strong id="tongBan">0 bịch</strong>
+<strong id="tongBanThang">0 bịch</strong>
 </p>
 
 <p class="big">
 <span>Tổng doanh số</span>
-<strong id="tongDoanhSo">0đ</strong>
+<strong id="tongDoanhSoThang">0đ</strong>
 </p>
+
+</div>
 
 </div>
 
@@ -308,23 +371,31 @@ const KEY = "APP_BAN_HANG";
 
 let ngayDangChon = new Date();
 
-let dangMoChiTiet = false;
+let namDangXem =
+    ngayDangChon.getFullYear();
+
+let thangDangMo = null;
 
 
 /* ================= DỮ LIỆU ================= */
 
 function layDuLieu(){
 
-    const data = localStorage.getItem(KEY);
+    const data =
+        localStorage.getItem(KEY);
 
     if(data === null){
         return {};
     }
 
     try{
+
         return JSON.parse(data);
+
     }catch(e){
+
         return {};
+
     }
 
 }
@@ -344,15 +415,18 @@ function luuDuLieu(data){
 
 function maNgay(date){
 
-    const y = date.getFullYear();
+    const y =
+        date.getFullYear();
 
-    const m = String(
-        date.getMonth()+1
-    ).padStart(2,"0");
+    const m =
+        String(
+            date.getMonth()+1
+        ).padStart(2,"0");
 
-    const d = String(
-        date.getDate()
-    ).padStart(2,"0");
+    const d =
+        String(
+            date.getDate()
+        ).padStart(2,"0");
 
     return y+"-"+m+"-"+d;
 
@@ -440,10 +514,12 @@ function tinh(){
 
 function timNgayTruoc(){
 
-    const data = layDuLieu();
+    const data =
+        layDuLieu();
 
     const hienTai =
         maNgay(ngayDangChon);
+
 
     const keys =
         Object.keys(data)
@@ -456,7 +532,9 @@ function timNgayTruoc(){
 
 
     if(keys.length === 0){
+
         return null;
+
     }
 
 
@@ -622,7 +700,16 @@ function luuNgay(){
 
     tinh();
 
-    tinhThang();
+    hienThi12Thang();
+
+
+    if(thangDangMo !== null){
+
+        hienChiTietThang(
+            thangDangMo
+        );
+
+    }
 
 
     alert(
@@ -632,26 +719,17 @@ function luuNgay(){
 }
 
 
-/* ================= DOANH SỐ THÁNG ================= */
+/* ================= TỔNG THÁNG ================= */
 
-function tinhThang(){
+function layTongThang(nam,thang){
 
     const data =
         layDuLieu();
 
 
-    const nam =
-        ngayDangChon.getFullYear();
-
-    const thang =
-        ngayDangChon.getMonth();
-
-
     let tongBan = 0;
 
     let tongDoanhSo = 0;
-
-    let danhSach = [];
 
 
     Object.keys(data).forEach(
@@ -673,10 +751,168 @@ function tinhThang(){
                 m === thang
             ){
 
+                tongBan +=
+                    Number(
+                        data[key].ban
+                    ) || 0;
+
+
+                tongDoanhSo +=
+                    Number(
+                        data[key].doanhSo
+                    ) || 0;
+
+            }
+
+        }
+    );
+
+
+    return {
+
+        tongBan:tongBan,
+
+        tongDoanhSo:tongDoanhSo
+
+    };
+
+}
+
+
+/* ================= HIỆN 12 THÁNG ================= */
+
+function hienThi12Thang(){
+
+    document.getElementById(
+        "namHienTai"
+    ).innerText =
+        "Năm "+namDangXem;
+
+
+    const box =
+        document.getElementById("dsThang");
+
+
+    let html = "";
+
+
+    for(let i=0;i<12;i++){
+
+        const tong =
+            layTongThang(
+                namDangXem,
+                i
+            );
+
+
+        const soThang =
+            String(i+1)
+            .padStart(2,"0");
+
+
+        const active =
+            thangDangMo === i
+            ? " active"
+            : "";
+
+
+        html += `
+
+        <button
+            class="thangBtn${active}"
+            onclick="moThang(${i})"
+        >
+
+            T${soThang}
+
+            <span class="thangDoanhSo">
+                ${tien(tong.tongDoanhSo)}
+            </span>
+
+        </button>
+
+        `;
+
+    }
+
+
+    box.innerHTML =
+        html;
+
+}
+
+
+/* ================= MỞ THÁNG ================= */
+
+function moThang(thang){
+
+    if(thangDangMo === thang){
+
+        thangDangMo = null;
+
+        document.getElementById(
+            "chiTiet"
+        ).classList.remove("hien");
+
+        hienThi12Thang();
+
+        return;
+
+    }
+
+
+    thangDangMo =
+        thang;
+
+
+    hienThi12Thang();
+
+    hienChiTietThang(
+        thang
+    );
+
+}
+
+
+/* ================= CHI TIẾT THÁNG ================= */
+
+function hienChiTietThang(thang){
+
+    const data =
+        layDuLieu();
+
+
+    let danhSach = [];
+
+    let tongBan = 0;
+
+    let tongDoanhSo = 0;
+
+
+    Object.keys(data).forEach(
+        function(key){
+
+            const p =
+                key.split("-");
+
+
+            const y =
+                Number(p[0]);
+
+            const m =
+                Number(p[1])-1;
+
+
+            if(
+                y === namDangXem &&
+                m === thang
+            ){
+
                 const ban =
                     Number(
                         data[key].ban
                     ) || 0;
+
 
                 const doanhSo =
                     Number(
@@ -686,7 +922,8 @@ function tinhThang(){
 
                 tongBan += ban;
 
-                tongDoanhSo += doanhSo;
+                tongDoanhSo +=
+                    doanhSo;
 
 
                 danhSach.push({
@@ -708,136 +945,134 @@ function tinhThang(){
     danhSach.sort(
         function(a,b){
 
-            return a.key.localeCompare(b.key);
+            return a.key.localeCompare(
+                b.key
+            );
 
         }
     );
 
 
-    document.getElementById("thang").innerText =
-        "Tháng "+
-        String(thang+1).padStart(2,"0")+
+    const soThang =
+        String(thang+1)
+        .padStart(2,"0");
+
+
+    document.getElementById(
+        "tieuDeChiTiet"
+    ).innerText =
+        "📅 Chi tiết tháng "+
+        soThang+
         "/"+
-        nam;
-
-
-    document.getElementById("tongBan").innerText =
-        tongBan+" bịch";
-
-
-    document.getElementById("tongDoanhSo").innerText =
-        tien(tongDoanhSo);
+        namDangXem;
 
 
     const danhSachNgay =
-        document.getElementById("danhSachNgay");
+        document.getElementById(
+            "danhSachNgay"
+        );
 
 
     if(danhSach.length === 0){
 
         danhSachNgay.innerHTML =
-            '<div class="khongCoDuLieu">Chưa có dữ liệu trong tháng này</div>';
+            '<div class="khongCo">Chưa có dữ liệu trong tháng này</div>';
 
-        return;
+    }else{
+
+        let html = "";
+
+
+        danhSach.forEach(
+            function(item){
+
+                const p =
+                    item.key.split("-");
+
+
+                const ngay =
+                    p[2]+"/"+
+                    p[1]+"/"+
+                    p[0];
+
+
+                html += `
+
+                <div class="ngayItem">
+
+                    <div>
+
+                        <div class="ngay">
+                            📅 ${ngay}
+                        </div>
+
+                        <div class="soBan">
+                            Đã bán: ${item.ban} bịch
+                        </div>
+
+                    </div>
+
+                    <div class="doanhSoNgay">
+                        ${tien(item.doanhSo)}
+                    </div>
+
+                </div>
+
+                `;
+
+            }
+        );
+
+
+        danhSachNgay.innerHTML =
+            html;
 
     }
 
 
-    let html = "";
+    document.getElementById(
+        "tongBanThang"
+    ).innerText =
+        tongBan+" bịch";
 
 
-    danhSach.forEach(
-        function(item){
-
-            const parts =
-                item.key.split("-");
-
-
-            const ngay =
-                parts[2]+"/"+
-                parts[1]+"/"+
-                parts[0];
+    document.getElementById(
+        "tongDoanhSoThang"
+    ).innerText =
+        tien(tongDoanhSo);
 
 
-            html += `
-
-            <div class="ngayItem">
-
-                <div>
-
-                    <div class="ngay">
-                        📅 ${ngay}
-                    </div>
-
-                    <div class="banNgay">
-                        Đã bán: ${item.ban} bịch
-                    </div>
-
-                </div>
-
-                <div class="doanhSoNgay">
-                    ${tien(item.doanhSo)}
-                </div>
-
-            </div>
-
-            `;
-
-        }
-    );
-
-
-    danhSachNgay.innerHTML =
-        html;
+    document.getElementById(
+        "chiTiet"
+    ).classList.add("hien");
 
 }
 
 
-/* ================= MỞ CHI TIẾT ================= */
+/* ================= ĐỔI NĂM ================= */
 
-function moChiTietThang(){
+function doiNam(so){
 
-    dangMoChiTiet =
-        !dangMoChiTiet;
+    namDangXem += so;
 
-
-    const box =
-        document.getElementById("chiTietThang");
+    thangDangMo = null;
 
 
-    const button =
-        document.getElementById("btnThang");
+    document.getElementById(
+        "chiTiet"
+    ).classList.remove("hien");
 
 
-    if(dangMoChiTiet){
-
-        box.classList.add("hien");
-
-        button.innerHTML =
-            '📅 <span id="thang">'+
-            document.getElementById("thang").innerText+
-            '</span>'+
-            '<span style="float:right;">▲</span>';
-
-    }else{
-
-        box.classList.remove("hien");
-
-        button.innerHTML =
-            '📅 <span id="thang">'+
-            document.getElementById("thang").innerText+
-            '</span>'+
-            '<span style="float:right;">▼</span>';
-
-    }
+    hienThi12Thang();
 
 }
 
 
 /* ================= SỰ KIỆN ================= */
 
-document.getElementById("btnPrev")
-.addEventListener(
+document.getElementById(
+    "btnPrev"
+).addEventListener(
     "click",
     function(){
 
@@ -847,8 +1082,9 @@ document.getElementById("btnPrev")
 );
 
 
-document.getElementById("btnNext")
-.addEventListener(
+document.getElementById(
+    "btnNext"
+).addEventListener(
     "click",
     function(){
 
@@ -858,43 +1094,65 @@ document.getElementById("btnNext")
 );
 
 
-document.getElementById("btnSaveDay")
-.addEventListener(
+document.getElementById(
+    "btnSaveDay"
+).addEventListener(
     "click",
     luuNgay
 );
 
 
-document.getElementById("btnThang")
-.addEventListener(
+document.getElementById(
+    "btnNamTruoc"
+).addEventListener(
     "click",
-    moChiTietThang
+    function(){
+
+        doiNam(-1);
+
+    }
 );
 
 
-document.getElementById("tonDau")
-.addEventListener(
+document.getElementById(
+    "btnNamSau"
+).addEventListener(
+    "click",
+    function(){
+
+        doiNam(1);
+
+    }
+);
+
+
+document.getElementById(
+    "tonDau"
+).addEventListener(
     "input",
     tinh
 );
 
 
-document.getElementById("nhap")
-.addEventListener(
+document.getElementById(
+    "nhap"
+).addEventListener(
     "input",
     tinh
 );
 
 
-document.getElementById("ban")
-.addEventListener(
+document.getElementById(
+    "ban"
+).addEventListener(
     "input",
     tinh
 );
 
 
-document.getElementById("gia")
-.addEventListener(
+document.getElementById(
+    "gia"
+).addEventListener(
     "input",
     tinh
 );
@@ -906,22 +1164,25 @@ taiNgay();
 
 tinh();
 
-tinhThang();
+hienThi12Thang();
 
 
 /* ================= OFFLINE ================= */
 
 if("serviceWorker" in navigator){
 
-    navigator.serviceWorker.register("./sw.js")
-    .catch(function(error){
+    navigator.serviceWorker.register(
+        "./sw.js"
+    ).catch(
+        function(error){
 
-        console.log(
-            "Service Worker:",
-            error
-        );
+            console.log(
+                "Service Worker:",
+                error
+            );
 
-    });
+        }
+    );
 
 }
 
