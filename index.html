@@ -395,7 +395,7 @@ input:focus{
 
 <button
 id="btnTimKiem"
-onclick="moTimKiem()"
+type="button"
 style="
 position:absolute;
 right:-5px;
@@ -408,10 +408,10 @@ border-radius:50%;
 background:white;
 font-size:18px;
 cursor:pointer;
+z-index:10;
 ">
 🔍
 </button>
-
 </div>
 
 
@@ -2362,6 +2362,11 @@ document.getElementById("btnTimKiemDuLieu").onclick = function(){
     document.getElementById("ketQuaTimKiem").innerHTML = html;
 
 };
+    document.getElementById("btnTimKiem").addEventListener("click", function(){
+
+    document.getElementById("trangTimKiem").classList.toggle("active");
+
+});
 </script>
 
 </body>
