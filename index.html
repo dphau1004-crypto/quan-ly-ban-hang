@@ -392,7 +392,9 @@ input:focus{
 <button id="btnThongKe" class="menuBtn">
 📊 Thống kê
 </button>
-
+<button id="btnTimKiem" class="menuBtn">
+🔍 Tìm kiếm
+</button>
 </div>
 
 
@@ -737,7 +739,27 @@ style="display:none"
 
 </div>
 
+<!-- ================= TÌM KIẾM ================= -->
 
+<div id="trangTimKiem" class="trang">
+
+<div class="card">
+
+<h1>🔍 Tìm kiếm</h1>
+
+<label>Chọn ngày cần tìm</label>
+
+<input id="ngayTimKiem" type="date">
+
+<button id="btnTimKiemDuLieu" class="save">
+🔍 TÌM KIẾM
+</button>
+
+</div>
+
+<div id="ketQuaTimKiem"></div>
+
+</div>
 <script>
 
 const KEY="APP_BAN_HANG";
@@ -2148,7 +2170,204 @@ if("serviceWorker" in navigator){
     });
 
 }
+/* ================= CHUYỂN SANG TÌM KIẾM ================= */
 
+document.getElementById("btnTimKiem").onclick = function(){
+
+    document.getElementById("trangTimKiem")
+        .classList.add("active");
+
+    document.getElementById("trangBanHang")
+        .classList.remove("active");
+
+    document.getElementById("trangNhapHang")
+        .classList.remove("active");
+
+    document.getElementById("trangThongKe")
+        .classList.remove("active");
+
+
+    document.getElementById("btnTimKiem")
+        .classList.add("active");
+
+    document.getElementById("btnBanHang")
+        .classList.remove("active");
+
+    document.getElementById("btnNhapHang")
+        .classList.remove("active");
+
+    document.getElementById("btnThongKe")
+        .classList.remove("active");
+
+};
+    /* ================= TÌM DỮ LIỆU ================= */
+
+document.getElementById("btnTimKiemDuLieu").onclick = function(){
+
+    const ngay = document.getElementById("ngayTimKiem").value;
+
+    if(!ngay){
+        alert("❌ Vui lòng chọn ngày cần tìm!");
+        return;
+    }
+
+    const dataBan = layDuLieu();
+    const dataNhap = layDuLieuNhap();
+
+    const ban = dataBan[ngay];
+    const nhap = dataNhap[ngay];
+
+    const ngayHienThi = ngay.split("-").reverse().join("/");
+
+    if(!ban && !nhap){
+
+        document.getElementById("ketQuaTimKiem").innerHTML = `
+        <div class="card">
+            <div class="khongCo">
+                ❌ Không có dữ liệu ngày ${ngayHienThi}
+            </div>
+        </div>
+        `;
+
+        return;
+    }
+
+    let html = `
+    <div class="card">
+        <h2>📅 Kết quả ngày ${ngayHienThi}</h2>
+    </div>
+    `;
+
+
+    /* ===== BÁN HÀNG ===== */
+
+    if(ban){
+
+        html += `
+        <div class="card">
+
+            <h2>🥡 Bán hàng</h2>
+
+            <div class="result">
+
+                <p>
+                    <span>Tồn đầu</span>
+                    <strong>${ban.tonDau || 0} bịch</strong>
+                </p>
+
+                <p>
+                    <span>+ Nhập</span>
+                    <strong>${ban.nhap || 0} bịch</strong>
+                </p>
+
+                <p>
+                    <span>− Bán</span>
+                    <strong>${ban.ban || 0} bịch</strong>
+                </p>
+
+                <p>
+                    <span>Giá / bịch</span>
+                    <strong>${tien(Number(ban.gia) || 0)}</strong>
+                </p>
+
+                <p class="big">
+                    <span>Tồn cuối</span>
+                    <strong>${ban.tonCuoi || 0} bịch</strong>
+                </p>
+
+            </div>
+
+            <div class="result">
+
+                <p class="big">
+                    <span>💰 Doanh số</span>
+                    <strong>${tien(Number(ban.doanhSo) || 0)}</strong>
+                </p>
+
+            </div>
+
+        </div>
+        `;
+    }
+
+
+    /* ===== NHẬP HÀNG ===== */
+
+    if(nhap){
+
+        let tongTien = 0;
+        let danhSach = "";
+
+        (nhap.items || []).forEach(function(x){
+
+            const soLuong = Number(x.soLuong) || 0;
+            const donGia = Number(x.donGia) || 0;
+            const thanhTien = soLuong * donGia;
+
+            tongTien += thanhTien;
+
+            danhSach += `
+            <div class="ngayItem">
+
+                <div>
+
+                    <div class="ngay">
+                        📦 ${x.maHang}
+                    </div>
+
+                    <div class="soBan">
+                        ĐVT: ${x.donVi}
+                    </div>
+
+                    <div class="soBan">
+                        Số lượng: ${soLuong}
+                    </div>
+
+                    <div class="soBan">
+                        Đơn giá: ${tienNhap(donGia)}
+                    </div>
+
+                </div>
+
+                <div class="doanhSoNgay">
+                    ${tienNhap(thanhTien)}
+                </div>
+
+            </div>
+            `;
+        });
+
+
+        html += `
+        <div class="card">
+
+            <h2>📦 Nhập hàng</h2>
+
+            ${danhSach || 
+            '<div class="khongCo">Không có hàng nhập</div>'}
+
+            <div class="result">
+
+                <p>
+                    <span>Số mặt hàng</span>
+                    <strong>${(nhap.items || []).length}</strong>
+                </p>
+
+                <p class="big">
+                    <span>💰 Tổng tiền nhập</span>
+                    <strong>${tienNhap(tongTien)}</strong>
+                </p>
+
+            </div>
+
+        </div>
+        `;
+    }
+
+
+    document.getElementById("ketQuaTimKiem").innerHTML = html;
+
+};
 </script>
 
 </body>
