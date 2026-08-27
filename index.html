@@ -2189,17 +2189,11 @@ if("serviceWorker" in navigator){
 }
 /* ================= CHUYỂN SANG TÌM KIẾM ================= */
 
-function moTimKiem(){
+document.getElementById("btnTimKiem").addEventListener("click", function(){
 
-    const o = document.getElementById("trangTimKiem");
+    document.getElementById("trangTimKiem").classList.toggle("active");
 
-    if(o.classList.contains("active")){
-        o.classList.remove("active");
-    }else{
-        o.classList.add("active");
-    }
-
-}
+});
     /* ================= TÌM DỮ LIỆU ================= */
 
 document.getElementById("btnTimKiemDuLieu").onclick = function(){
