@@ -1,30 +1,43 @@
+```html
 <!DOCTYPE html>
 <html lang="vi">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <meta name="theme-color" content="#111827">
 <title>Quản lý bán hàng</title>
 
 <style>
-*{box-sizing:border-box}
+*{
+    box-sizing:border-box;
+}
+
+html,
+body{
+    width:100%;
+    min-height:100%;
+    margin:0;
+    padding:0;
+}
 
 body{
     font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif;
     background:#f5f7fb;
-    margin:0;
-    padding:12px;
     color:#111827;
+    overflow-x:hidden;
 }
 
 .container{
+    width:100%;
     max-width:650px;
-    margin:auto;
+    margin:0 auto;
+    padding:12px;
 }
 
-/* ===== MENU ===== */
+/* ================= MENU ================= */
 
 .menu{
+    width:100%;
     display:grid;
     grid-template-columns:repeat(3,1fr);
     gap:8px;
@@ -35,10 +48,11 @@ body{
     box-shadow:0 3px 12px rgba(0,0,0,.06);
     position:sticky;
     top:8px;
-    z-index:10;
+    z-index:100;
 }
 
 .menuBtn{
+    width:100%;
     border:0;
     padding:13px 5px;
     border-radius:13px;
@@ -55,27 +69,47 @@ body{
     color:white;
     box-shadow:0 4px 10px rgba(17,24,39,.2);
 }
-    /* ===== KÍNH LÚP ===== */
+
+/* ================= KÍNH LÚP ================= */
+
+.searchWrap{
+    width:100%;
+    display:flex;
+    justify-content:flex-end;
+    margin-bottom:10px;
+}
 
 #btnTimKiem{
-    position:absolute;
-    right:-2px;
-    top:-8px;
-    width:30px;
-    height:30px;
+    width:42px;
+    height:42px;
     padding:0;
     border:0;
     border-radius:50%;
     background:white;
-    font-size:17px;
+    font-size:19px;
     cursor:pointer;
-    z-index:999;
-    box-shadow:0 2px 8px rgba(0,0,0,.12);
+    box-shadow:0 3px 10px rgba(0,0,0,.10);
 }
 
-/* ===== CARD ===== */
+#btnTimKiem:active{
+    transform:scale(.96);
+}
+
+/* ================= TRANG ================= */
+
+.trang{
+    display:none;
+    width:100%;
+}
+
+.trang.active{
+    display:block;
+}
+
+/* ================= CARD ================= */
 
 .card{
+    width:100%;
     background:white;
     padding:18px;
     margin-bottom:14px;
@@ -88,21 +122,18 @@ h1{
     margin:0 0 20px;
 }
 
-h2,h3{
+h2,
+h3{
     margin-top:0;
 }
 
-/* ===== TRANG ===== */
-
-.trang{display:none}
-.trang.active{display:block}
-
-/* ===== NGÀY ===== */
+/* ================= NGÀY ================= */
 
 .date{
     display:flex;
     justify-content:space-between;
     align-items:center;
+    gap:10px;
     margin-bottom:18px;
 }
 
@@ -110,6 +141,7 @@ h2,h3{
 .namDieuKhien button{
     width:44px;
     height:42px;
+    flex-shrink:0;
     border:0;
     border-radius:12px;
     background:#f1f3f6;
@@ -119,14 +151,16 @@ h2,h3{
 }
 
 .dateText{
+    flex:1;
     font-weight:700;
     text-align:center;
     font-size:15px;
 }
 
-/* ===== INPUT ===== */
+/* ================= INPUT ================= */
 
 .grid{
+    width:100%;
     display:grid;
     grid-template-columns:1fr 1fr;
     gap:12px;
@@ -141,6 +175,7 @@ label{
 
 input{
     width:100%;
+    max-width:100%;
     padding:13px;
     margin-top:6px;
     border:1px solid #d1d5db;
@@ -155,9 +190,10 @@ input:focus{
     box-shadow:0 0 0 3px rgba(17,24,39,.08);
 }
 
-/* ===== KẾT QUẢ ===== */
+/* ================= KẾT QUẢ ================= */
 
 .result{
+    width:100%;
     background:#f6f7f9;
     padding:14px;
     border-radius:13px;
@@ -168,7 +204,13 @@ input:focus{
     display:flex;
     justify-content:space-between;
     align-items:center;
+    gap:10px;
     margin:8px 0;
+}
+
+.result strong{
+    text-align:right;
+    word-break:break-word;
 }
 
 .big{
@@ -198,7 +240,7 @@ input:focus{
     transform:scale(.98);
 }
 
-/* ===== TỒN ===== */
+/* ================= TỒN ================= */
 
 .stock{
     text-align:center;
@@ -215,7 +257,7 @@ input:focus{
     font-weight:800;
 }
 
-/* ===== THÁNG ===== */
+/* ================= THÁNG ================= */
 
 .thangNam{
     text-align:center;
@@ -228,16 +270,19 @@ input:focus{
     display:flex;
     justify-content:space-between;
     align-items:center;
+    gap:10px;
     margin-bottom:15px;
 }
 
 .dsThang{
+    width:100%;
     display:grid;
     grid-template-columns:repeat(3,1fr);
     gap:9px;
 }
 
 .thangBtn{
+    width:100%;
     border:0;
     background:#f1f3f6;
     padding:12px 5px;
@@ -260,7 +305,7 @@ input:focus{
     opacity:.75;
 }
 
-/* ===== CHI TIẾT ===== */
+/* ================= CHI TIẾT ================= */
 
 .chiTiet{
     display:none;
@@ -278,9 +323,11 @@ input:focus{
 }
 
 .ngayItem{
+    width:100%;
     display:flex;
     justify-content:space-between;
     align-items:center;
+    gap:10px;
     padding:13px;
     background:#f6f7f9;
     border-radius:12px;
@@ -300,6 +347,7 @@ input:focus{
 .doanhSoNgay{
     font-weight:800;
     text-align:right;
+    white-space:nowrap;
 }
 
 .khongCo{
@@ -308,7 +356,7 @@ input:focus{
     padding:18px;
 }
 
-/* ===== NHẬP HÀNG ===== */
+/* ================= NHẬP HÀNG ================= */
 
 .nhapTable{
     width:100%;
@@ -357,17 +405,20 @@ input:focus{
     cursor:pointer;
 }
 
-/* ===== MOBILE ===== */
+/* ================= MOBILE ================= */
 
 @media(max-width:430px){
 
-    body{
-        padding:9px;
+    .container{
+        width:100%;
+        max-width:none;
+        padding:8px;
     }
 
-    .card{
-        padding:15px;
-        border-radius:16px;
+    .menu{
+        width:100%;
+        margin-bottom:10px;
+        border-radius:15px;
     }
 
     .menuBtn{
@@ -375,16 +426,40 @@ input:focus{
         padding:12px 3px;
     }
 
+    .card{
+        width:100%;
+        padding:15px;
+        border-radius:16px;
+    }
+
     h1{
         font-size:22px;
     }
 
     .grid{
+        width:100%;
         gap:9px;
     }
 
     input{
+        width:100%;
         font-size:16px;
+    }
+
+    .result{
+        width:100%;
+    }
+
+    .dsThang{
+        grid-template-columns:repeat(3,1fr);
+    }
+
+    .ngayItem{
+        padding:12px;
+    }
+
+    .doanhSoNgay{
+        font-size:14px;
     }
 }
 </style>
@@ -394,9 +469,22 @@ input:focus{
 
 <div class="container">
 
+<!-- ================= KÍNH LÚP ================= -->
+
+<div class="searchWrap">
+
+<button
+id="btnTimKiem"
+type="button">
+🔍
+</button>
+
+</div>
+
+
 <!-- ================= MENU ================= -->
 
-<div class="menu" style="position:relative;">
+<div class="menu">
 
 <button id="btnBanHang" class="menuBtn active">
 🥡 Bán hàng
@@ -410,26 +498,7 @@ input:focus{
 📊 Thống kê
 </button>
 
-<button
-id="btnTimKiem"
-type="button"
-onclick="document.getElementById('trangTimKiem').classList.toggle('active')"
-style="
-position:absolute;
-right:-5px;
-top:-8px;
-width:32px;
-height:32px;
-padding:0;
-border:0;
-border-radius:50%;
-background:white;
-font-size:18px;
-cursor:pointer;
-z-index:9999;
-">
-🔍
-</button>
+</div>
 
 
 <!-- ================= BÁN HÀNG ================= -->
@@ -525,7 +594,7 @@ z-index:9999;
 </div>
 
 
-<!-- DOANH SỐ NĂM -->
+<!-- ================= DOANH SỐ NĂM ================= -->
 
 <div class="card">
 
@@ -616,7 +685,7 @@ z-index:9999;
 ➕ THÊM HÀNG
 </button>
 
-<div style="overflow-x:auto">
+<div style="width:100%;overflow-x:auto">
 
 <table class="nhapTable">
 
@@ -764,14 +833,12 @@ z-index:9999;
 id="fileKhoiPhuc"
 type="file"
 accept=".json"
-style="display:none"
->
+style="display:none">
 
 </div>
 
 </div>
 
-</div>
 
 <!-- ================= TÌM KIẾM ================= -->
 
@@ -794,6 +861,10 @@ style="display:none"
 <div id="ketQuaTimKiem"></div>
 
 </div>
+
+</div>
+
+
 <script>
 
 const KEY="APP_BAN_HANG";
@@ -817,11 +888,15 @@ let thangTKDangMo=null;
 function layDuLieu(){
 
     try{
+
         return JSON.parse(
             localStorage.getItem(KEY)
         ) || {};
+
     }catch(e){
+
         return {};
+
     }
 
 }
@@ -914,15 +989,21 @@ function tinh(){
 function timNgayTruoc(){
 
     const data=layDuLieu();
-    const hienTai=maNgay(ngayDangChon);
+
+    const hienTai=maNgay(
+        ngayDangChon
+    );
 
     const keys=Object.keys(data)
         .filter(key=>key<hienTai)
         .sort();
 
-    if(keys.length===0)return null;
+    if(keys.length===0)
+        return null;
 
-    return data[keys[keys.length-1]];
+    return data[
+        keys[keys.length-1]
+    ];
 
 }
 
@@ -931,19 +1012,32 @@ function timNgayTruoc(){
 
 function taiNgay(){
 
-    const key=maNgay(ngayDangChon);
+    const key=maNgay(
+        ngayDangChon
+    );
 
-    document.getElementById("dateText").innerText=
-        "📅 "+hienNgay(ngayDangChon);
+    document.getElementById(
+        "dateText"
+    ).innerText=
+        "📅 "+hienNgay(
+            ngayDangChon
+        );
 
     const data=layDuLieu();
 
     if(data[key]){
 
-        document.getElementById("tonDau").value=data[key].tonDau;
-        document.getElementById("nhap").value=data[key].nhap;
-        document.getElementById("ban").value=data[key].ban;
-        document.getElementById("gia").value=data[key].gia;
+        document.getElementById("tonDau").value=
+            data[key].tonDau;
+
+        document.getElementById("nhap").value=
+            data[key].nhap;
+
+        document.getElementById("ban").value=
+            data[key].ban;
+
+        document.getElementById("gia").value=
+            data[key].gia;
 
     }else{
 
@@ -951,8 +1045,11 @@ function taiNgay(){
 
         if(truoc){
 
-            document.getElementById("tonDau").value=truoc.tonCuoi;
-            document.getElementById("gia").value=truoc.gia;
+            document.getElementById("tonDau").value=
+                truoc.tonCuoi;
+
+            document.getElementById("gia").value=
+                truoc.gia;
 
         }else{
 
@@ -1002,16 +1099,25 @@ function luuNgay(){
 
     if(ban>tonDau+nhap){
 
-        alert("❌ Số bán vượt quá số tồn!");
+        alert(
+            "❌ Số bán vượt quá số tồn!"
+        );
+
         return;
 
     }
 
-    const tonCuoi=tonDau+nhap-ban;
-    const doanhSo=ban*gia;
+    const tonCuoi=
+        tonDau+nhap-ban;
+
+    const doanhSo=
+        ban*gia;
 
     const data=layDuLieu();
-    const key=maNgay(ngayDangChon);
+
+    const key=maNgay(
+        ngayDangChon
+    );
 
     data[key]={
         tonDau,
@@ -1025,12 +1131,17 @@ function luuNgay(){
     luuDuLieu(data);
 
     tinh();
+
     hienThi12Thang();
 
     if(thangDangMo!==null)
-        hienChiTietThang(thangDangMo);
+        hienChiTietThang(
+            thangDangMo
+        );
 
-    alert("✅ Đã lưu ngày!");
+    alert(
+        "✅ Đã lưu ngày!"
+    );
 
 }
 
@@ -1053,48 +1164,69 @@ function layTongThang(nam,thang){
 
         if(y===nam && m===thang){
 
-            tongBan+=Number(data[key].ban)||0;
-            tongDoanhSo+=Number(data[key].doanhSo)||0;
+            tongBan+=
+                Number(data[key].ban)||0;
+
+            tongDoanhSo+=
+                Number(data[key].doanhSo)||0;
 
         }
 
     });
 
-    return {tongBan,tongDoanhSo};
+    return{
+        tongBan,
+        tongDoanhSo
+    };
 
 }
 
+
 function hienThi12Thang(){
 
-    document.getElementById("namHienTai").innerText=
+    document.getElementById(
+        "namHienTai"
+    ).innerText=
         "Năm "+namDangXem;
 
     let html="";
 
     for(let i=0;i<12;i++){
 
-        const tong=layTongThang(
-            namDangXem,
-            i
-        );
+        const tong=
+            layTongThang(
+                namDangXem,
+                i
+            );
 
         const active=
-            thangDangMo===i?" active":"";
+            thangDangMo===i
+            ?" active":"";
 
         html+=`
-        <button class="thangBtn${active}"
+
+        <button
+        class="thangBtn${active}"
         onclick="moThang(${i})">
+
         T${String(i+1).padStart(2,"0")}
+
         <span class="thangDoanhSo">
         ${tien(tong.tongDoanhSo)}
         </span>
-        </button>`;
+
+        </button>
+
+        `;
 
     }
 
-    document.getElementById("dsThang").innerHTML=html;
+    document.getElementById(
+        "dsThang"
+    ).innerHTML=html;
 
 }
+
 
 function moThang(thang){
 
@@ -1115,9 +1247,13 @@ function moThang(thang){
     thangDangMo=thang;
 
     hienThi12Thang();
-    hienChiTietThang(thang);
+
+    hienChiTietThang(
+        thang
+    );
 
 }
+
 
 function hienChiTietThang(thang){
 
@@ -1134,10 +1270,16 @@ function hienChiTietThang(thang){
         const y=Number(p[0]);
         const m=Number(p[1])-1;
 
-        if(y===namDangXem && m===thang){
+        if(
+            y===namDangXem &&
+            m===thang
+        ){
 
-            const ban=Number(data[key].ban)||0;
-            const doanhSo=Number(data[key].doanhSo)||0;
+            const ban=
+                Number(data[key].ban)||0;
+
+            const doanhSo=
+                Number(data[key].doanhSo)||0;
 
             tongBan+=ban;
             tongDoanhSo+=doanhSo;
@@ -1153,7 +1295,8 @@ function hienChiTietThang(thang){
     });
 
     danhSach.sort(
-        (a,b)=>a.key.localeCompare(b.key)
+        (a,b)=>
+            a.key.localeCompare(b.key)
     );
 
     const soThang=
@@ -1176,12 +1319,15 @@ function hienChiTietThang(thang){
 
         danhSach.forEach(item=>{
 
-            const p=item.key.split("-");
+            const p=
+                item.key.split("-");
 
             html+=`
+
             <div class="ngayItem">
 
                 <div>
+
                     <div class="ngay">
                     📅 ${p[2]}/${p[1]}/${p[0]}
                     </div>
@@ -1189,13 +1335,16 @@ function hienChiTietThang(thang){
                     <div class="soBan">
                     Đã bán: ${item.ban} bịch
                     </div>
+
                 </div>
 
                 <div class="doanhSoNgay">
                     ${tien(item.doanhSo)}
                 </div>
 
-            </div>`;
+            </div>
+
+            `;
 
         });
 
@@ -1207,11 +1356,13 @@ function hienChiTietThang(thang){
 
     document.getElementById(
         "tongBanThang"
-    ).innerText=tongBan+" bịch";
+    ).innerText=
+        tongBan+" bịch";
 
     document.getElementById(
         "tongDoanhSoThang"
-    ).innerText=tien(tongDoanhSo);
+    ).innerText=
+        tien(tongDoanhSo);
 
     document.getElementById(
         "chiTiet"
@@ -1219,9 +1370,11 @@ function hienChiTietThang(thang){
 
 }
 
+
 function doiNam(so){
 
     namDangXem+=so;
+
     thangDangMo=null;
 
     document.getElementById(
@@ -1238,14 +1391,19 @@ function doiNam(so){
 function layDuLieuNhap(){
 
     try{
+
         return JSON.parse(
             localStorage.getItem(KEY_NHAP)
         ) || {};
+
     }catch(e){
+
         return {};
+
     }
 
 }
+
 
 function luuDuLieuNhap(data){
 
@@ -1256,6 +1414,7 @@ function luuDuLieuNhap(data){
 
 }
 
+
 function maNgayNhap(d){
 
     return d.getFullYear()+"-"+
@@ -1263,6 +1422,7 @@ function maNgayNhap(d){
         String(d.getDate()).padStart(2,"0");
 
 }
+
 
 function hienNgayNhap(d){
 
@@ -1278,6 +1438,7 @@ function hienNgayNhap(d){
 
 }
 
+
 function tienNhap(n){
 
     return new Intl.NumberFormat(
@@ -1286,70 +1447,103 @@ function tienNhap(n){
 
 }
 
+
 function hienNhapNgay(){
 
     document.getElementById(
         "ngayNhapText"
     ).innerText=
-        "📅 "+hienNgayNhap(ngayNhapDangChon);
+        "📅 "+hienNgayNhap(
+            ngayNhapDangChon
+        );
 
-    const data=layDuLieuNhap();
-    const key=maNgayNhap(ngayNhapDangChon);
+    const data=
+        layDuLieuNhap();
+
+    const key=
+        maNgayNhap(
+            ngayNhapDangChon
+        );
 
     dsNhapHienTai=
-        data[key] ? data[key].items : [];
+        data[key]
+        ? data[key].items
+        : [];
 
     hienBangNhap();
 
 }
 
+
 function hienBangNhap(){
 
     const tb=
-        document.getElementById("dsHangNhap");
+        document.getElementById(
+            "dsHangNhap"
+        );
 
     let total=0;
     let html="";
 
-    dsNhapHienTai.forEach((x,i)=>{
+    dsNhapHienTai.forEach(
+        (x,i)=>{
 
-        const thanh=
-            (Number(x.soLuong)||0)*
-            (Number(x.donGia)||0);
+            const thanh=
+                (Number(x.soLuong)||0)*
+                (Number(x.donGia)||0);
 
-        total+=thanh;
+            total+=thanh;
 
-        html+=`
-        <tr>
+            html+=`
 
-        <td>${x.maHang}</td>
+            <tr>
 
-        <td>${x.donVi}</td>
+                <td>${x.maHang}</td>
 
-        <td>${x.soLuong}</td>
+                <td>${x.donVi}</td>
 
-        <td>${tienNhap(x.donGia)}</td>
+                <td>${x.soLuong}</td>
 
-        <td>${tienNhap(thanh)}</td>
+                <td>${tienNhap(x.donGia)}</td>
 
-        <td>
-        <button class="xoaDong"
-        onclick="xoaDongNhap(${i})">
-        ✕
-        </button>
-        </td>
+                <td>${tienNhap(thanh)}</td>
 
-        </tr>`;
+                <td>
 
-    });
+                    <button
+                    class="xoaDong"
+                    onclick="xoaDongNhap(${i})">
+
+                    ✕
+
+                    </button>
+
+                </td>
+
+            </tr>
+
+            `;
+
+        }
+    );
 
     tb.innerHTML=
         html ||
-        `<tr>
-        <td colspan="6" class="khongCo">
-        Chưa có hàng nhập trong ngày
-        </td>
-        </tr>`;
+        `
+
+        <tr>
+
+            <td
+            colspan="6"
+            class="khongCo">
+
+            Chưa có hàng nhập trong ngày
+
+            </td>
+
+        </tr>
+
+        `;
 
     document.getElementById(
         "tongMatHangNhap"
@@ -1362,6 +1556,7 @@ function hienBangNhap(){
         tienNhap(total);
 
 }
+
 
 function themDongNhap(){
 
@@ -1431,19 +1626,28 @@ function themDongNhap(){
 
 }
 
+
 function xoaDongNhap(i){
 
-    dsNhapHienTai.splice(i,1);
+    dsNhapHienTai.splice(
+        i,
+        1
+    );
+
     hienBangNhap();
 
 }
 
+
 function luuNhap(){
 
-    const data=layDuLieuNhap();
-    const key=maNgayNhap(
-        ngayNhapDangChon
-    );
+    const data=
+        layDuLieuNhap();
+
+    const key=
+        maNgayNhap(
+            ngayNhapDangChon
+        );
 
     data[key]={
         items:dsNhapHienTai
@@ -1464,6 +1668,7 @@ function luuNhap(){
 
 }
 
+
 function doiNgayNhap(so){
 
     ngayNhapDangChon.setDate(
@@ -1474,9 +1679,12 @@ function doiNgayNhap(so){
 
 }
 
+
 function tongNhapThang(nam,thang){
 
-    const data=layDuLieuNhap();
+    const data=
+        layDuLieuNhap();
+
     let tong=0;
 
     Object.keys(data).forEach(k=>{
@@ -1486,7 +1694,10 @@ function tongNhapThang(nam,thang){
         const y=Number(p[0]);
         const m=Number(p[1])-1;
 
-        if(y===nam && m===thang){
+        if(
+            y===nam &&
+            m===thang
+        ){
 
             (data[k].items||[])
             .forEach(x=>{
@@ -1505,6 +1716,7 @@ function tongNhapThang(nam,thang){
 
 }
 
+
 function hienThi12ThangNhap(){
 
     document.getElementById(
@@ -1521,6 +1733,7 @@ function hienThi12ThangNhap(){
             ?" active":"";
 
         html+=`
+
         <button
         class="thangBtn${active}"
         onclick="moThangNhap(${i})">
@@ -1528,15 +1741,19 @@ function hienThi12ThangNhap(){
         T${String(i+1).padStart(2,"0")}
 
         <span class="thangDoanhSo">
+
         ${tienNhap(
             tongNhapThang(
                 namNhapDangXem,
                 i
             )
         )}
+
         </span>
 
-        </button>`;
+        </button>
+
+        `;
 
     }
 
@@ -1545,6 +1762,7 @@ function hienThi12ThangNhap(){
     ).innerHTML=html;
 
 }
+
 
 function moThangNhap(thang){
 
@@ -1565,13 +1783,18 @@ function moThangNhap(thang){
     thangNhapDangMo=thang;
 
     hienThi12ThangNhap();
-    hienChiTietThangNhap(thang);
+
+    hienChiTietThangNhap(
+        thang
+    );
 
 }
 
+
 function hienChiTietThangNhap(thang){
 
-    const data=layDuLieuNhap();
+    const data=
+        layDuLieuNhap();
 
     let rows="";
     let tong=0;
@@ -1585,7 +1808,10 @@ function hienChiTietThangNhap(thang){
         const y=Number(p[0]);
         const m=Number(p[1])-1;
 
-        if(y===namNhapDangXem && m===thang){
+        if(
+            y===namNhapDangXem &&
+            m===thang
+        ){
 
             let day=0;
 
@@ -1601,6 +1827,7 @@ function hienChiTietThangNhap(thang){
             tong+=day;
 
             rows+=`
+
             <div class="ngayItem">
 
                 <div>
@@ -1610,17 +1837,23 @@ function hienChiTietThangNhap(thang){
                     </div>
 
                     <div class="soBan">
+
                     ${(data[k].items||[]).length}
                     mặt hàng
+
                     </div>
 
                 </div>
 
                 <div class="doanhSoNgay">
+
                 ${tienNhap(day)}
+
                 </div>
 
-            </div>`;
+            </div>
+
+            `;
 
         }
 
@@ -1650,9 +1883,11 @@ function hienChiTietThangNhap(thang){
 
 }
 
+
 function doiNamNhap(so){
 
     namNhapDangXem+=so;
+
     thangNhapDangMo=null;
 
     document.getElementById(
@@ -1669,6 +1904,7 @@ function doiNamNhap(so){
 function layTongBanHangTK(nam,thang){
 
     const data=layDuLieu();
+
     let tong=0;
 
     Object.keys(data).forEach(key=>{
@@ -1680,9 +1916,10 @@ function layTongBanHangTK(nam,thang){
             Number(p[1])-1===thang
         ){
 
-            tong+=Number(
-                data[key].doanhSo
-            )||0;
+            tong+=
+                Number(
+                    data[key].doanhSo
+                )||0;
 
         }
 
@@ -1692,11 +1929,16 @@ function layTongBanHangTK(nam,thang){
 
 }
 
+
 function layTongNhapHangTK(nam,thang){
 
-    return tongNhapThang(nam,thang);
+    return tongNhapThang(
+        nam,
+        thang
+    );
 
 }
+
 
 function hienThi12ThangTK(){
 
@@ -1721,13 +1963,15 @@ function hienThi12ThangTK(){
                 i
             );
 
-        const doanhSo=ban-nhap;
+        const doanhSo=
+            ban-nhap;
 
         const active=
             thangTKDangMo===i
             ?" active":"";
 
         html+=`
+
         <button
         class="thangBtn${active}"
         onclick="moThangTK(${i})">
@@ -1738,7 +1982,9 @@ function hienThi12ThangTK(){
         ${tien(doanhSo)}
         </span>
 
-        </button>`;
+        </button>
+
+        `;
 
     }
 
@@ -1747,6 +1993,7 @@ function hienThi12ThangTK(){
     ).innerHTML=html;
 
 }
+
 
 function moThangTK(thang){
 
@@ -1767,9 +2014,13 @@ function moThangTK(thang){
     thangTKDangMo=thang;
 
     hienThi12ThangTK();
-    hienChiTietTK(thang);
+
+    hienChiTietTK(
+        thang
+    );
 
 }
+
 
 function hienChiTietTK(thang){
 
@@ -1797,18 +2048,24 @@ function hienChiTietTK(thang){
 
     document.getElementById(
         "tongBanTK"
-    ).innerText=tien(tongBan);
+    ).innerText=
+        tien(tongBan);
 
     document.getElementById(
         "tongNhapTK"
-    ).innerText=tien(tongNhap);
+    ).innerText=
+        tien(tongNhap);
 
     document.getElementById(
         "doanhSoTK"
-    ).innerText=tien(doanhSo);
+    ).innerText=
+        tien(doanhSo);
 
-    const dataBan=layDuLieu();
-    const dataNhap=layDuLieuNhap();
+    const dataBan=
+        layDuLieu();
+
+    const dataNhap=
+        layDuLieuNhap();
 
     let ngay={};
 
@@ -1862,7 +2119,8 @@ function hienChiTietTK(thang){
 
     });
 
-    const keys=Object.keys(ngay).sort();
+    const keys=
+        Object.keys(ngay).sort();
 
     let html="";
 
@@ -1882,6 +2140,7 @@ function hienChiTietTK(thang){
                 ngay[key].nhap;
 
             html+=`
+
             <div class="ngayItem">
 
                 <div>
@@ -1901,10 +2160,14 @@ function hienChiTietTK(thang){
                 </div>
 
                 <div class="doanhSoNgay">
+
                 ${tien(ketQua)}
+
                 </div>
 
-            </div>`;
+            </div>
+
+            `;
 
         });
 
@@ -1920,9 +2183,11 @@ function hienChiTietTK(thang){
 
 }
 
+
 function doiNamTK(so){
 
     namTKDangXem+=so;
+
     thangTKDangMo=null;
 
     document.getElementById(
@@ -1941,36 +2206,52 @@ function hienTrang(trang){
     const pages=[
         "trangBanHang",
         "trangNhapHang",
-        "trangThongKe"
+        "trangThongKe",
+        "trangTimKiem"
     ];
 
     pages.forEach(id=>{
+
         document.getElementById(id)
         .classList.remove("active");
+
     });
 
     document.getElementById(trang)
         .classList.add("active");
 
-    document.querySelectorAll(".menuBtn")
-    .forEach(btn=>btn.classList.remove("active"));
+    document.querySelectorAll(
+        ".menuBtn"
+    ).forEach(btn=>{
+        btn.classList.remove("active");
+    });
 
 }
+
+
+/* ================= MENU ================= */
 
 document.getElementById(
     "btnBanHang"
 ).onclick=function(){
 
-    hienTrang("trangBanHang");
+    hienTrang(
+        "trangBanHang"
+    );
+
     this.classList.add("active");
 
 };
+
 
 document.getElementById(
     "btnNhapHang"
 ).onclick=function(){
 
-    hienTrang("trangNhapHang");
+    hienTrang(
+        "trangNhapHang"
+    );
+
     this.classList.add("active");
 
     hienNhapNgay();
@@ -1978,11 +2259,15 @@ document.getElementById(
 
 };
 
+
 document.getElementById(
     "btnThongKe"
 ).onclick=function(){
 
-    hienTrang("trangThongKe");
+    hienTrang(
+        "trangThongKe"
+    );
+
     this.classList.add("active");
 
     hienThi12ThangTK();
@@ -1990,27 +2275,84 @@ document.getElementById(
 };
 
 
-/* ================= SỰ KIỆN ================= */
+/* ================= KÍNH LÚP ================= */
 
-document.getElementById("btnPrev")
-.onclick=()=>doiNgay(-1);
+document.getElementById(
+    "btnTimKiem"
+).onclick=function(){
 
-document.getElementById("btnNext")
-.onclick=()=>doiNgay(1);
+    const trang=
+        document.getElementById(
+            "trangTimKiem"
+        );
 
-document.getElementById("btnSaveDay")
-.onclick=luuNgay;
+    const dangMo=
+        trang.classList.contains(
+            "active"
+        );
 
-document.getElementById("btnNamTruoc")
-.onclick=()=>doiNam(-1);
+    hienTrang(
+        dangMo
+        ? "trangBanHang"
+        : "trangTimKiem"
+    );
 
-document.getElementById("btnNamSau")
-.onclick=()=>doiNam(1);
+    if(dangMo){
 
-["tonDau","nhap","ban","gia"]
-.forEach(id=>{
+        document.getElementById(
+            "btnBanHang"
+        ).classList.add("active");
+
+    }
+
+};
+
+
+/* ================= BÁN HÀNG ================= */
+
+document.getElementById(
+    "btnPrev"
+).onclick=
+    ()=>doiNgay(-1);
+
+
+document.getElementById(
+    "btnNext"
+).onclick=
+    ()=>doiNgay(1);
+
+
+document.getElementById(
+    "btnSaveDay"
+).onclick=
+    luuNgay;
+
+
+document.getElementById(
+    "btnNamTruoc"
+).onclick=
+    ()=>doiNam(-1);
+
+
+document.getElementById(
+    "btnNamSau"
+).onclick=
+    ()=>doiNam(1);
+
+
+[
+    "tonDau",
+    "nhap",
+    "ban",
+    "gia"
+].forEach(id=>{
+
     document.getElementById(id)
-    .addEventListener("input",tinh);
+    .addEventListener(
+        "input",
+        tinh
+    );
+
 });
 
 
@@ -2018,38 +2360,52 @@ document.getElementById("btnNamSau")
 
 document.getElementById(
     "btnThemDongNhap"
-).onclick=themDongNhap;
+).onclick=
+    themDongNhap;
+
 
 document.getElementById(
     "btnLuuNhap"
-).onclick=luuNhap;
+).onclick=
+    luuNhap;
+
 
 document.getElementById(
     "btnNhapPrev"
-).onclick=()=>doiNgayNhap(-1);
+).onclick=
+    ()=>doiNgayNhap(-1);
+
 
 document.getElementById(
     "btnNhapNext"
-).onclick=()=>doiNgayNhap(1);
+).onclick=
+    ()=>doiNgayNhap(1);
+
 
 document.getElementById(
     "btnNamNhapTruoc"
-).onclick=()=>doiNamNhap(-1);
+).onclick=
+    ()=>doiNamNhap(-1);
+
 
 document.getElementById(
     "btnNamNhapSau"
-).onclick=()=>doiNamNhap(1);
+).onclick=
+    ()=>doiNamNhap(1);
 
 
 /* ================= THỐNG KÊ ================= */
 
 document.getElementById(
     "btnNamTKTruoc"
-).onclick=()=>doiNamTK(-1);
+).onclick=
+    ()=>doiNamTK(-1);
+
 
 document.getElementById(
     "btnNamTKSau"
-).onclick=()=>doiNamTK(1);
+).onclick=
+    ()=>doiNamTK(1);
 
 
 /* ================= SAO LƯU ================= */
@@ -2059,19 +2415,37 @@ document.getElementById(
 ).onclick=function(){
 
     const backup={
-        banHang:layDuLieu(),
-        nhapHang:layDuLieuNhap(),
-        ngaySaoLuu:new Date().toISOString()
+
+        banHang:
+            layDuLieu(),
+
+        nhapHang:
+            layDuLieuNhap(),
+
+        ngaySaoLuu:
+            new Date().toISOString()
+
     };
 
-    const blob=new Blob(
-        [JSON.stringify(backup,null,2)],
-        {type:"application/json"}
-    );
+    const blob=
+        new Blob(
+            [
+                JSON.stringify(
+                    backup,
+                    null,
+                    2
+                )
+            ],
+            {
+                type:"application/json"
+            }
+        );
 
-    const url=URL.createObjectURL(blob);
+    const url=
+        URL.createObjectURL(blob);
 
-    const a=document.createElement("a");
+    const a=
+        document.createElement("a");
 
     a.href=url;
 
@@ -2084,7 +2458,9 @@ document.getElementById(
 
     URL.revokeObjectURL(url);
 
-    alert("✅ Đã sao lưu dữ liệu!");
+    alert(
+        "✅ Đã sao lưu dữ liệu!"
+    );
 
 };
 
@@ -2101,24 +2477,30 @@ document.getElementById(
 
 };
 
+
 document.getElementById(
     "fileKhoiPhuc"
 ).addEventListener(
     "change",
     function(e){
 
-        const file=e.target.files[0];
+        const file=
+            e.target.files[0];
 
-        if(!file)return;
+        if(!file)
+            return;
 
-        const reader=new FileReader();
+        const reader=
+            new FileReader();
 
         reader.onload=function(){
 
             try{
 
                 const backup=
-                    JSON.parse(reader.result);
+                    JSON.parse(
+                        reader.result
+                    );
 
                 if(
                     !backup.banHang ||
@@ -2137,7 +2519,8 @@ document.getElementById(
                     !confirm(
                         "Khôi phục sẽ thay dữ liệu hiện tại. Tiếp tục?"
                     )
-                )return;
+                )
+                    return;
 
                 localStorage.setItem(
                     KEY,
@@ -2175,86 +2558,87 @@ document.getElementById(
 );
 
 
-/* ================= KHỞI ĐỘNG ================= */
+/* ================= TÌM KIẾM ================= */
 
-taiNgay();
-tinh();
+document.getElementById(
+    "btnTimKiemDuLieu"
+).onclick=function(){
 
-hienThi12Thang();
-
-hienNhapNgay();
-hienThi12ThangNhap();
-
-hienThi12ThangTK();
-
-
-/* ================= OFFLINE ================= */
-
-if("serviceWorker" in navigator){
-
-    navigator.serviceWorker.register(
-        "./sw.js"
-    ).catch(function(error){
-
-        console.log(
-            "Service Worker:",
-            error
-        );
-
-    });
-
-}
-/* ================= CHUYỂN SANG TÌM KIẾM ================= */
-
-document.getElementById("btnTimKiem").addEventListener("click", function(){
-
-    document.getElementById("trangTimKiem").classList.toggle("active");
-
-});
-    /* ================= TÌM DỮ LIỆU ================= */
-
-document.getElementById("btnTimKiemDuLieu").onclick = function(){
-
-    const ngay = document.getElementById("ngayTimKiem").value;
+    const ngay=
+        document.getElementById(
+            "ngayTimKiem"
+        ).value;
 
     if(!ngay){
-        alert("❌ Vui lòng chọn ngày cần tìm!");
+
+        alert(
+            "❌ Vui lòng chọn ngày cần tìm!"
+        );
+
         return;
+
     }
 
-    const dataBan = layDuLieu();
-    const dataNhap = layDuLieuNhap();
+    const dataBan=
+        layDuLieu();
 
-    const ban = dataBan[ngay];
-    const nhap = dataNhap[ngay];
+    const dataNhap=
+        layDuLieuNhap();
 
-    const ngayHienThi = ngay.split("-").reverse().join("/");
+    const ban=
+        dataBan[ngay];
+
+    const nhap=
+        dataNhap[ngay];
+
+    const ngayHienThi=
+        ngay
+        .split("-")
+        .reverse()
+        .join("/");
 
     if(!ban && !nhap){
 
-        document.getElementById("ketQuaTimKiem").innerHTML = `
+        document.getElementById(
+            "ketQuaTimKiem"
+        ).innerHTML=`
+
         <div class="card">
+
             <div class="khongCo">
-                ❌ Không có dữ liệu ngày ${ngayHienThi}
+
+            ❌ Không có dữ liệu ngày
+            ${ngayHienThi}
+
             </div>
+
         </div>
+
         `;
 
         return;
+
     }
 
-    let html = `
+    let html=`
+
     <div class="card">
-        <h2>📅 Kết quả ngày ${ngayHienThi}</h2>
+
+        <h2>
+        📅 Kết quả ngày ${ngayHienThi}
+        </h2>
+
     </div>
+
     `;
 
 
-    /* ===== BÁN HÀNG ===== */
+    /* ================= BÁN HÀNG ================= */
 
     if(ban){
 
-        html += `
+        html+=`
+
         <div class="card">
 
             <h2>🥡 Bán hàng</h2>
@@ -2263,27 +2647,39 @@ document.getElementById("btnTimKiemDuLieu").onclick = function(){
 
                 <p>
                     <span>Tồn đầu</span>
-                    <strong>${ban.tonDau || 0} bịch</strong>
+                    <strong>
+                    ${ban.tonDau||0} bịch
+                    </strong>
                 </p>
 
                 <p>
                     <span>+ Nhập</span>
-                    <strong>${ban.nhap || 0} bịch</strong>
+                    <strong>
+                    ${ban.nhap||0} bịch
+                    </strong>
                 </p>
 
                 <p>
                     <span>− Bán</span>
-                    <strong>${ban.ban || 0} bịch</strong>
+                    <strong>
+                    ${ban.ban||0} bịch
+                    </strong>
                 </p>
 
                 <p>
                     <span>Giá / bịch</span>
-                    <strong>${tien(Number(ban.gia) || 0)}</strong>
+                    <strong>
+                    ${tien(
+                        Number(ban.gia)||0
+                    )}
+                    </strong>
                 </p>
 
                 <p class="big">
                     <span>Tồn cuối</span>
-                    <strong>${ban.tonCuoi || 0} bịch</strong>
+                    <strong>
+                    ${ban.tonCuoi||0} bịch
+                    </strong>
                 </p>
 
             </div>
@@ -2291,51 +2687,72 @@ document.getElementById("btnTimKiemDuLieu").onclick = function(){
             <div class="result">
 
                 <p class="big">
-                    <span>💰 Doanh số</span>
-                    <strong>${tien(Number(ban.doanhSo) || 0)}</strong>
+
+                    <span>
+                    💰 Doanh số
+                    </span>
+
+                    <strong>
+                    ${tien(
+                        Number(
+                            ban.doanhSo
+                        )||0
+                    )}
+                    </strong>
+
                 </p>
 
             </div>
 
         </div>
+
         `;
+
     }
 
 
-    /* ===== NHẬP HÀNG ===== */
+    /* ================= NHẬP HÀNG ================= */
 
     if(nhap){
 
-        let tongTien = 0;
-        let danhSach = "";
+        let tongTien=0;
+        let danhSach="";
 
-        (nhap.items || []).forEach(function(x){
+        (nhap.items||[])
+        .forEach(function(x){
 
-            const soLuong = Number(x.soLuong) || 0;
-            const donGia = Number(x.donGia) || 0;
-            const thanhTien = soLuong * donGia;
+            const soLuong=
+                Number(x.soLuong)||0;
 
-            tongTien += thanhTien;
+            const donGia=
+                Number(x.donGia)||0;
 
-            danhSach += `
+            const thanhTien=
+                soLuong*donGia;
+
+            tongTien+=thanhTien;
+
+            danhSach+=`
+
             <div class="ngayItem">
 
                 <div>
 
                     <div class="ngay">
-                        📦 ${x.maHang}
+                    📦 ${x.maHang}
                     </div>
 
                     <div class="soBan">
-                        ĐVT: ${x.donVi}
+                    ĐVT: ${x.donVi}
                     </div>
 
                     <div class="soBan">
-                        Số lượng: ${soLuong}
+                    Số lượng: ${soLuong}
                     </div>
 
                     <div class="soBan">
-                        Đơn giá: ${tienNhap(donGia)}
+                    Đơn giá:
+                    ${tienNhap(donGia)}
                     </div>
 
                 </div>
@@ -2345,42 +2762,102 @@ document.getElementById("btnTimKiemDuLieu").onclick = function(){
                 </div>
 
             </div>
+
             `;
+
         });
 
 
-        html += `
+        html+=`
+
         <div class="card">
 
             <h2>📦 Nhập hàng</h2>
 
-            ${danhSach || 
-            '<div class="khongCo">Không có hàng nhập</div>'}
+            ${
+                danhSach ||
+                '<div class="khongCo">Không có hàng nhập</div>'
+            }
 
             <div class="result">
 
                 <p>
-                    <span>Số mặt hàng</span>
-                    <strong>${(nhap.items || []).length}</strong>
+
+                    <span>
+                    Số mặt hàng
+                    </span>
+
+                    <strong>
+                    ${(nhap.items||[]).length}
+                    </strong>
+
                 </p>
 
                 <p class="big">
-                    <span>💰 Tổng tiền nhập</span>
-                    <strong>${tienNhap(tongTien)}</strong>
+
+                    <span>
+                    💰 Tổng tiền nhập
+                    </span>
+
+                    <strong>
+                    ${tienNhap(tongTien)}
+                    </strong>
+
                 </p>
 
             </div>
 
         </div>
+
         `;
+
     }
 
-
-    document.getElementById("ketQuaTimKiem").innerHTML = html;
+    document.getElementById(
+        "ketQuaTimKiem"
+    ).innerHTML=html;
 
 };
+
+
+/* ================= KHỞI ĐỘNG ================= */
+
+taiNgay();
+
+tinh();
+
+hienThi12Thang();
+
+hienNhapNgay();
+
+hienThi12ThangNhap();
+
+hienThi12ThangTK();
+
+
+/* ================= OFFLINE ================= */
+
+if(
+    "serviceWorker" in navigator
+){
+
+    navigator.serviceWorker.register(
+        "./sw.js"
+    ).catch(
+        function(error){
+
+            console.log(
+                "Service Worker:",
+                error
+            );
+
+        }
+    );
+
+}
 
 </script>
 
 </body>
 </html>
+```
