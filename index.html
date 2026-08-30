@@ -905,37 +905,14 @@ function layDuLieu(){
 
 }
 
-    async function luuDuLieu(data){
+    function luuDuLieu(data){
 
     localStorage.setItem(
         KEY,
         JSON.stringify(data)
     );
 
-    for(const key of Object.keys(data)){
-
-        const x = data[key];
-
-        const { error } = await supabaseClient
-            .from("ban_hang")
-            .upsert({
-                ngay: key,
-                ton_dau: x.tonDau,
-                nhap: x.nhap,
-                ban: x.ban,
-                gia: x.gia,
-                ton_cuoi: x.tonCuoi,
-                doanh_so: x.doanhSo
-            });
-
-        if(error){
-            console.error("Lỗi đồng bộ bán hàng:", error);
-        }
-
-    }
-
 }
-
 
 /* ================= NGÀY ================= */
 
